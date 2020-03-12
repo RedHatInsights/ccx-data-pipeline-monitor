@@ -1,0 +1,18 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{py,ipynb,html,csv}]
+indent_size = unset
+
+[*.html]
+trim_trailing_whitespace = unset
+
+[{Jenkinsfile,*.yml,*.yaml,*.ini}]
+indent_size = 2
