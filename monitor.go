@@ -26,11 +26,28 @@ import (
 	"github.com/c-bata/go-prompt"
 	"github.com/logrusorgru/aurora"
 	"github.com/spf13/viper"
+	"golang.org/x/crypto/ssh/terminal"
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/commands"
 )
 
+var ocLogin string
 var colorizer aurora.Aurora
+
+func tryToLogin(ocLogin string) {
+	fmt.Println(colorizer.Blue("\nDone"))
+}
+
+func login() {
+	fmt.Print("login: ")
+	p, err := terminal.ReadPassword(0)
+	if err != nil {
+		fmt.Println(colorizer.Red("not set"))
+	} else {
+		ocLogin = string(p)
+		tryToLogin(ocLogin)
+	}
+}
 
 type simpleCommand struct {
 	prefix  string
@@ -41,6 +58,7 @@ var simpleCommands = []simpleCommand{
 	{"bye", commands.Quit},
 	{"exit", commands.Quit},
 	{"quit", commands.Quit},
+	{"login", login},
 }
 
 func executeFixedCommand(t string) {
@@ -63,9 +81,15 @@ func completer(in prompt.Document) []prompt.Suggest {
 		{Text: "exit", Description: "quit the application"},
 		{Text: "quit", Description: "quit the application"},
 		{Text: "bye", Description: "quit the application"},
+		{Text: "login", Description: "provide login info"},
 	}
 
 	blocks := strings.Split(in.TextBeforeCursor(), " ")
+
+	// don't display compation for empty command
+	if in.GetWordBeforeCursor() == "" {
+		return nil
+	}
 
 	// commands consisting of just one word
 	return prompt.FilterHasPrefix(firstWord, blocks[0], true)
