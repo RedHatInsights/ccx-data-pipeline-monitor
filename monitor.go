@@ -21,6 +21,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/c-bata/go-prompt"
 	"github.com/logrusorgru/aurora"
@@ -31,11 +32,43 @@ import (
 
 var colorizer aurora.Aurora
 
+type simpleCommand struct {
+	prefix  string
+	handler func()
+}
+
+var simpleCommands = []simpleCommand{
+	{"bye", commands.Quit},
+	{"exit", commands.Quit},
+	{"quit", commands.Quit},
+}
+
+func executeFixedCommand(t string) {
+	// simple commands without parameters
+	for _, command := range simpleCommands {
+		if strings.HasPrefix(t, command.prefix) {
+			command.handler()
+			return
+		}
+	}
+	fmt.Println("Command not found")
+}
+
 func executor(t string) {
+	executeFixedCommand(t)
 }
 
 func completer(in prompt.Document) []prompt.Suggest {
-	return nil
+	firstWord := []prompt.Suggest{
+		{Text: "exit", Description: "quit the application"},
+		{Text: "quit", Description: "quit the application"},
+		{Text: "bye", Description: "quit the application"},
+	}
+
+	blocks := strings.Split(in.TextBeforeCursor(), " ")
+
+	// commands consisting of just one word
+	return prompt.FilterHasPrefix(firstWord, blocks[0], true)
 }
 
 func main() {
