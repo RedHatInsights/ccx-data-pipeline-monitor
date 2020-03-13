@@ -1,0 +1,3 @@
+[openshift]
+url="https://a.b.com"
+project="ccx-data-pipeline"
