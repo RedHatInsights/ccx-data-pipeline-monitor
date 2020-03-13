@@ -29,12 +29,19 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/commands"
+	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
+	"github.com/RedHatInsights/ccx-data-pipeline-monitor/oc"
 )
 
+var openShiftConfig config.OpenShiftConfig
 var ocLogin string
 var colorizer aurora.Aurora
 
 func tryToLogin(ocLogin string) {
+	stdout, stderr, err := oc.Login(openShiftConfig.URL, ocLogin)
+	fmt.Println(stdout)
+	fmt.Println(stderr)
+	fmt.Println(err == nil)
 	fmt.Println(colorizer.Blue("\nDone"))
 }
 
@@ -96,14 +103,16 @@ func completer(in prompt.Document) []prompt.Suggest {
 }
 
 func main() {
+
 	// read configuration first
-	viper.SetConfigName("config")
+	viper.SetConfigName("config_my")
 	viper.AddConfigPath(".")
 
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("Fatal error config file: %s", err))
 	}
+	openShiftConfig = config.ReadOpenShiftConfig()
 
 	// parse command line arguments and flags
 	var colors = flag.Bool("colors", true, "enable or disable colors")
