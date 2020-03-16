@@ -18,6 +18,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -33,6 +34,7 @@ import (
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/commands"
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/oc"
+	"github.com/RedHatInsights/ccx-data-pipeline-monitor/server"
 )
 
 var openShiftConfig config.OpenShiftConfig
@@ -120,6 +122,7 @@ func loadConfiguration(defaultConfigName string, envVar string) error {
 		viper.SetConfigName("config")
 		viper.AddConfigPath(".")
 	}
+	defer log.Println("Done")
 	return viper.ReadInConfig()
 }
 
@@ -148,7 +151,10 @@ func startCLI() {
 }
 
 func startWebUI() {
-	//serverConfig := config.ReadServerConfig()
+	serverConfig := config.ReadServerConfig()
+	server := server.New(serverConfig)
+	server.Start()
+	defer server.Stop(context.TODO())
 }
 
 func main() {
