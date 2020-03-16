@@ -20,7 +20,9 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/c-bata/go-prompt"
@@ -34,6 +36,7 @@ import (
 )
 
 var openShiftConfig config.OpenShiftConfig
+
 var ocLogin string
 var colorizer aurora.Aurora
 
@@ -102,18 +105,25 @@ func completer(in prompt.Document) []prompt.Suggest {
 	return prompt.FilterHasPrefix(firstWord, blocks[0], true)
 }
 
-func main() {
-
-	// read configuration first
-	viper.SetConfigName("config_my")
-	viper.AddConfigPath(".")
-
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %s", err))
+func loadConfiguration(defaultConfigName string, envVar string) error {
+	log.Println("Reading configuration")
+	configFile, specified := os.LookupEnv("CCX_DATA_PIPELINE_MONITOR")
+	if specified {
+		// we need to separate the directory name and filename without extension
+		directory, basename := filepath.Split(configFile)
+		file := strings.TrimSuffix(basename, filepath.Ext(basename))
+		// parse the configuration
+		viper.SetConfigName(file)
+		viper.AddConfigPath(directory)
+	} else {
+		// parse the configuration
+		viper.SetConfigName("config")
+		viper.AddConfigPath(".")
 	}
-	openShiftConfig = config.ReadOpenShiftConfig()
+	return viper.ReadInConfig()
+}
 
+func startCLI() {
 	// parse command line arguments and flags
 	var colors = flag.Bool("colors", true, "enable or disable colors")
 	var useCompleter = flag.Bool("completer", true, "enable or disable command line completer")
@@ -134,5 +144,29 @@ func main() {
 			executor(line)
 			fmt.Print("> ")
 		}
+	}
+}
+
+func startWebUI() {
+	//serverConfig := config.ReadServerConfig()
+}
+
+func main() {
+	// read configuration first
+	err := loadConfiguration("config", "CCX_DATA_PIPELINE_MONITOR")
+	if err != nil {
+		panic(fmt.Errorf("Fatal error config file: %s", err))
+	}
+
+	uiType := viper.Sub("ui").GetString("type")
+	openShiftConfig = config.ReadOpenShiftConfig()
+
+	switch uiType {
+	case "cli":
+		startCLI()
+	case "web":
+		startWebUI()
+	default:
+		log.Fatal("Unknown UI type", uiType)
 	}
 }
