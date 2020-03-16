@@ -1,3 +1,10 @@
+[ui]
+type="web"
+
+[server]
+use_https=false
+address=":8080"
+
 [openshift]
 url="https://a.b.com"
 project="ccx-data-pipeline"
