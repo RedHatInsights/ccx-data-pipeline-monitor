@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright ÄÂĂÂÄÂĂÂÄÂÄšÄÄÂĂÂ  2020 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,9 +18,12 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"github.com/gorilla/mux"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 
@@ -43,13 +46,58 @@ func New(config config.ServerConfig) *HTTPServer {
 func logRequestHandler(writer http.ResponseWriter, request *http.Request, nextHandler http.Handler) {
 	log.Println("Request URI: " + request.RequestURI)
 	log.Println("Request method: " + request.Method)
+	nextHandler.ServeHTTP(writer, request)
 	/*
 		metrics.APIRequests.With(prometheus.Labels{"url": request.RequestURI}).Inc()
 		startTime := time.Now()
-		nextHandler.ServeHTTP(writer, request)
 		duration := time.Since(startTime)
 		metrics.APIResponsesTime.With(prometheus.Labels{"url": request.RequestURI}).Observe(float64(duration.Microseconds()))
 	*/
+}
+
+func staticPage(filename string) func(writer http.ResponseWriter, request *http.Request) {
+	log.Println("Serving static file", filename)
+	return func(writer http.ResponseWriter, request *http.Request) {
+		sendStaticPage(writer, filename)
+	}
+}
+
+func sendStaticPage(writer http.ResponseWriter, filename string) {
+	body, err := ioutil.ReadFile(filename)
+	if err == nil {
+		writer.Header().Set("Server", "A Go Web Server")
+		writer.Header().Set("Content-Type", getContentType(filename))
+		_, err = fmt.Fprint(writer, string(body))
+		if err != nil {
+			log.Println("Error sending response body", err)
+		}
+	} else {
+		writer.WriteHeader(http.StatusNotFound)
+		notFoundResponse(writer)
+	}
+}
+
+func getContentType(filename string) string {
+	// TODO: to map
+	if strings.HasSuffix(filename, ".html") {
+		return "text/html"
+	} else if strings.HasSuffix(filename, ".js") {
+		return "application/javascript"
+	} else if strings.HasSuffix(filename, ".css") {
+		return "text/css"
+	}
+	return "text/html"
+}
+
+func writeResponse(writer http.ResponseWriter, message string) {
+	_, err := fmt.Fprint(writer, message)
+	if err != nil {
+		log.Println("Error sending response", err)
+	}
+}
+
+func notFoundResponse(writer http.ResponseWriter) {
+	writeResponse(writer, "Not found!")
 }
 
 // LogRequest - middleware for loging requests
@@ -68,12 +116,16 @@ func (server *HTTPServer) mainEndpoint(writer http.ResponseWriter, _ *http.Reque
 func (server *HTTPServer) Initialize(address string) http.Handler {
 	log.Println("Initializing HTTP server at", address)
 
-	router := mux.NewRouter().StrictSlash(true)
+	router := mux.NewRouter().StrictSlash(false)
 	router.Use(server.LogRequest)
 
-	// common REST API endpoints
-	router.HandleFunc("/", server.mainEndpoint).Methods(http.MethodGet)
+	// HTML etc.
+	router.HandleFunc("/", staticPage("html/index.html")).Methods(http.MethodGet)
+	router.HandleFunc("/bootstrap.min.css", staticPage("html/bootstrap.min.css"))
+	router.HandleFunc("/bootstrap.min.js", staticPage("html/bootstrap.min.js"))
+	router.HandleFunc("/ccx.css", staticPage("html/ccx.css"))
 
+	// common REST API endpoints
 	return router
 }
 
