@@ -42,6 +42,16 @@ var openShiftConfig config.OpenShiftConfig
 var ocLogin string
 var colorizer aurora.Aurora
 
+// BuildVersion contains the major.minor version of the CLI client
+var BuildVersion string = "*not set*"
+
+// BuildTime contains timestamp when the CLI client has been built
+var BuildTime string = "*not set*"
+
+func printVersion() {
+	fmt.Println(colorizer.Blue("Insights operator CLI client "), "version", colorizer.Yellow(BuildVersion), "compiled", colorizer.Yellow(BuildTime))
+}
+
 func tryToLogin(ocLogin string) {
 	stdout, stderr, err := oc.Login(openShiftConfig.URL, ocLogin)
 	fmt.Println(stdout)
@@ -71,6 +81,11 @@ var simpleCommands = []simpleCommand{
 	{"exit", commands.Quit},
 	{"quit", commands.Quit},
 	{"login", login},
+	{"?", commands.PrintHelp},
+	{"help", commands.PrintHelp},
+	{"version", printVersion},
+	{"license", commands.PrintLicense},
+	{"authors", commands.PrintAuthors},
 }
 
 func executeFixedCommand(t string) {
@@ -93,6 +108,13 @@ func completer(in prompt.Document) []prompt.Suggest {
 		{Text: "exit", Description: "quit the application"},
 		{Text: "quit", Description: "quit the application"},
 		{Text: "bye", Description: "quit the application"},
+
+		{Text: "help", Description: "show help with all commands"},
+		{Text: "version", Description: "prints the build information for CLI executable"},
+		{Text: "copyright", Description: "displays copyright notice"},
+		{Text: "license", Description: "displays license used by this project"},
+		{Text: "authors", Description: "displays list of authors"},
+
 		{Text: "login", Description: "provide login info"},
 	}
 
