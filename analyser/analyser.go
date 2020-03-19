@@ -136,18 +136,49 @@ func printConsumedEntries(entries []AggregatorLogEntry) {
 		printConsumedEntry(entry)
 	}
 }
+
+func messageWithOffsetIn(entries []AggregatorLogEntry, offset int) bool {
+	for _, entry := range entries {
+		if entry.Offset == offset {
+			return true
+		}
+	}
+	return false
+}
+
+func getConsumedNotReadMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	consumed := filterConsumedMessages(entries)
+	read := filterByMessage(entries, "Read")
+	notRead := []AggregatorLogEntry{}
+
+	for _, consumed := range consumed {
+		if !messageWithOffsetIn(read, consumed.Offset) {
+			notRead = append(notRead, consumed)
+		}
+	}
+	return notRead
+}
+
+func printConsumedNotRead(entries []AggregatorLogEntry) {
+	notRead := getConsumedNotReadMessages(entries)
+
+	printConsumedEntries(notRead)
+}
+
 func analyse() {
-	entries, err := readPipelineLogFile("pipeline2.log")
+	/*
+		entries, err := readPipelineLogFile("pipeline2.log")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(entries)
+	*/
+
+	entries2, err := readAggregatorLogFile("aggregator3.log")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(entries)
-
-	/*
-			entries, err := readAggregatorLogFile("aggregator1.log")
-			if err != nil {
-				log.Fatal(err)
-			}
-		fmt.Println(entries)
-	*/
+	fmt.Println("Read", len(entries2), "entries")
+	printAggregatorStatistic(entries2)
+	printConsumedNotRead(entries2)
 }
