@@ -1,5 +1,5 @@
 [ui]
-type="web"
+type="ui"
 
 [server]
 use_https=false
