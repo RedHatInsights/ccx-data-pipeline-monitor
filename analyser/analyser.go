@@ -17,11 +17,16 @@ type PipelineLogEntry struct {
 }
 
 type AggregatorLogEntry struct {
-	Level   string `json:"level"`
-	Time    string `json:"time"`
-	Message string `json:"message"`
-	Type    string `json:"type"`
-	Error   string `json:"error"`
+	Level        string `json:"level"`
+	Time         string `json:"time"`
+	Message      string `json:"message"`
+	Type         string `json:"type"`
+	Error        string `json:"error"`
+	Topic        string `json:"topic"`
+	Offset       int    `json:"offset"`
+	Group        string `json:"group"`
+	Organization int    `json:"organization"`
+	Cluster      string `json:"cluster"`
 }
 
 func readPipelineLogFile(filename string) ([]PipelineLogEntry, error) {
@@ -63,9 +68,11 @@ func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		entry := AggregatorLogEntry{}
-		err = json.Unmarshal([]byte(scanner.Text()), &entry)
+		text := scanner.Text()
+		err = json.Unmarshal([]byte(text), &entry)
 		if err != nil {
 			log.Println(err)
+			log.Println(text)
 		} else {
 			entries = append(entries, entry)
 		}
