@@ -107,6 +107,35 @@ func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorL
 	return filtered
 }
 
+func printStatisticLine(what string, entries []AggregatorLogEntry) {
+	fmt.Printf("%-12s %d messages\n", what, len(entries))
+}
+
+func printAggregatorStatistic(entries []AggregatorLogEntry) {
+	consumed := filterConsumedMessages(entries)
+	read := filterByMessage(entries, "Read")
+	whitelisted := filterByMessage(entries, "Organization whitelisted")
+	marshalled := filterByMessage(entries, "Marshalled")
+	checked := filterByMessage(entries, "Time ok")
+	stored := filterByMessage(entries, "Stored")
+
+	printStatisticLine("Consumed", consumed)
+	printStatisticLine("Read", read)
+	printStatisticLine("Whitelisted", whitelisted)
+	printStatisticLine("Marshalled", marshalled)
+	printStatisticLine("Checked", checked)
+	printStatisticLine("Stored", stored)
+}
+
+func printConsumedEntry(entry AggregatorLogEntry) {
+	fmt.Printf("%s %s %s %d\n", entry.Time, entry.Group, entry.Topic, entry.Offset)
+}
+
+func printConsumedEntries(entries []AggregatorLogEntry) {
+	for _, entry := range entries {
+		printConsumedEntry(entry)
+	}
+}
 func analyse() {
 	entries, err := readPipelineLogFile("pipeline2.log")
 	if err != nil {
