@@ -85,6 +85,28 @@ func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 	return entries, nil
 }
 
+func filterConsumedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	consumed := []AggregatorLogEntry{}
+
+	for _, entry := range entries {
+		if entry.Message == "Consumed" && entry.Group != "" {
+			consumed = append(consumed, entry)
+		}
+	}
+	return consumed
+}
+
+func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorLogEntry {
+	filtered := []AggregatorLogEntry{}
+
+	for _, entry := range entries {
+		if entry.Message == message && entry.Topic != "" && entry.Organization != 0 && entry.Cluster != "" && entry.Group == "" {
+			filtered = append(filtered, entry)
+		}
+	}
+	return filtered
+}
+
 func analyse() {
 	entries, err := readPipelineLogFile("pipeline2.log")
 	if err != nil {
