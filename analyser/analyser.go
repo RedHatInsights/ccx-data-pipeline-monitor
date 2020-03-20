@@ -131,6 +131,15 @@ func printConsumedEntry(entry AggregatorLogEntry) {
 	fmt.Printf("%s %s %s %d\n", entry.Time, entry.Group, entry.Topic, entry.Offset)
 }
 
+func printErrorsForMessageWithOffset(entries []AggregatorLogEntry, offset int) {
+	for _, entry := range entries {
+		if entry.Offset == offset && entry.Level == "error" {
+			fmt.Printf("\t%s %s\n", entry.Time, entry.Error)
+
+		}
+	}
+}
+
 func printConsumedEntries(entries []AggregatorLogEntry) {
 	for _, entry := range entries {
 		printConsumedEntry(entry)
