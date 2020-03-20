@@ -109,11 +109,12 @@ func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorL
 	return filtered
 }
 
-func printStatisticLine(what string, entries []AggregatorLogEntry) {
-	fmt.Printf("%-12s %d messages\n", what, len(entries))
+func printStatisticLine(colorizer aurora.Aurora, what string, entries []AggregatorLogEntry) {
+	e := strconv.Itoa(len(entries))
+	fmt.Printf("%-12s %s messages\n", what, colorizer.Blue(e))
 }
 
-func printAggregatorStatistic(entries []AggregatorLogEntry) {
+func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	consumed := filterConsumedMessages(entries)
 	read := filterByMessage(entries, "Read")
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
@@ -121,12 +122,12 @@ func printAggregatorStatistic(entries []AggregatorLogEntry) {
 	checked := filterByMessage(entries, "Time ok")
 	stored := filterByMessage(entries, "Stored")
 
-	printStatisticLine("Consumed", consumed)
-	printStatisticLine("Read", read)
-	printStatisticLine("Whitelisted", whitelisted)
-	printStatisticLine("Marshalled", marshalled)
-	printStatisticLine("Checked", checked)
-	printStatisticLine("Stored", stored)
+	printStatisticLine(colorizer, "Consumed", consumed)
+	printStatisticLine(colorizer, "Read", read)
+	printStatisticLine(colorizer, "Whitelisted", whitelisted)
+	printStatisticLine(colorizer, "Marshalled", marshalled)
+	printStatisticLine(colorizer, "Checked", checked)
+	printStatisticLine(colorizer, "Stored", stored)
 }
 
 func printConsumedEntry(entry AggregatorLogEntry) {
@@ -215,7 +216,6 @@ func analyse() {
 		log.Fatal(err)
 	}
 	fmt.Println("Read", len(entries2), "entries")
-	printAggregatorStatistic(entries2)
 	printConsumedNotRead(entries2)
 }
 
@@ -226,4 +226,16 @@ func ReadAggregatorLogFiles() (int, error) {
 		return 0, err
 	}
 	return len(aggregatorEntries), nil
+}
+
+func PrintAggregatorStatistic(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	printAggregatorStatistic(colorizer, aggregatorEntries)
 }
