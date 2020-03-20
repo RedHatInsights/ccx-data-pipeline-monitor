@@ -140,9 +140,10 @@ func printErrorsForMessageWithOffset(entries []AggregatorLogEntry, offset int) {
 	}
 }
 
-func printConsumedEntries(entries []AggregatorLogEntry) {
-	for _, entry := range entries {
+func printConsumedEntries(entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
+	for _, entry := range notRead {
 		printConsumedEntry(entry)
+		printErrorsForMessageWithOffset(entries, entry.Offset)
 	}
 }
 
@@ -171,7 +172,7 @@ func getConsumedNotReadMessages(entries []AggregatorLogEntry) []AggregatorLogEnt
 func printConsumedNotRead(entries []AggregatorLogEntry) {
 	notRead := getConsumedNotReadMessages(entries)
 
-	printConsumedEntries(notRead)
+	printConsumedEntries(entries, notRead)
 }
 
 func analyse() {
