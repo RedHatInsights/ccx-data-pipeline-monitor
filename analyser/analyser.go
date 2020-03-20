@@ -29,6 +29,8 @@ type AggregatorLogEntry struct {
 	Cluster      string `json:"cluster"`
 }
 
+var aggregatorEntries []AggregatorLogEntry = nil
+
 func readPipelineLogFile(filename string) ([]PipelineLogEntry, error) {
 	entries := []PipelineLogEntry{}
 
@@ -61,7 +63,7 @@ func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 
 	file, err := os.Open(filename)
 	if err != nil {
-		return entries, err
+		return nil, err
 	}
 	defer file.Close()
 
@@ -215,4 +217,13 @@ func analyse() {
 	fmt.Println("Read", len(entries2), "entries")
 	printAggregatorStatistic(entries2)
 	printConsumedNotRead(entries2)
+}
+
+func ReadAggregatorLogFiles() (int, error) {
+	var err error
+	aggregatorEntries, err = readAggregatorLogFile("aggregator3.log")
+	if err != nil {
+		return 0, err
+	}
+	return len(aggregatorEntries), nil
 }

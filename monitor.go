@@ -86,6 +86,7 @@ var simpleCommands = []simpleCommand{
 	{"version", printVersion},
 	{"license", commands.PrintLicense},
 	{"authors", commands.PrintAuthors},
+	{"load logs", commands.LoadLogs},
 }
 
 func executeFixedCommand(t string) {
@@ -116,9 +117,28 @@ func completer(in prompt.Document) []prompt.Suggest {
 		{Text: "authors", Description: "displays list of authors"},
 
 		{Text: "login", Description: "provide login info"},
+
+		{Text: "load", Description: "load given object or objects"},
 	}
 
+	secondWord := make(map[string][]prompt.Suggest)
+
+	// loading objects
+	secondWord["load"] = []prompt.Suggest{
+		{Text: "logs", Description: "load log files"},
+	}
+
+	emptySuggest := []prompt.Suggest{}
 	blocks := strings.Split(in.TextBeforeCursor(), " ")
+
+	if len(blocks) == 2 {
+		sec, ok := secondWord[blocks[0]]
+		if ok {
+			return prompt.FilterHasPrefix(sec, blocks[1], true)
+		}
+		// second word is not known
+		return emptySuggest
+	}
 
 	// don't display compation for empty command
 	if in.GetWordBeforeCursor() == "" {
