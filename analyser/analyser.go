@@ -131,6 +131,10 @@ func printConsumedEntry(entry AggregatorLogEntry) {
 	fmt.Printf("%s %s %s %d\n", entry.Time, entry.Group, entry.Topic, entry.Offset)
 }
 
+func printReadEntry(entry AggregatorLogEntry) {
+	fmt.Printf("%s %s %s %d %d %s\n", entry.Time, entry.Group, entry.Topic, entry.Offset, entry.Organization, entry.Cluster)
+}
+
 func printErrorsForMessageWithOffset(entries []AggregatorLogEntry, offset int) {
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == "error" {
@@ -143,6 +147,13 @@ func printErrorsForMessageWithOffset(entries []AggregatorLogEntry, offset int) {
 func printConsumedEntries(entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
 	for _, entry := range notRead {
 		printConsumedEntry(entry)
+		printErrorsForMessageWithOffset(entries, entry.Offset)
+	}
+}
+
+func printReadEntries(entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
+	for _, entry := range notRead {
+		printReadEntry(entry)
 		printErrorsForMessageWithOffset(entries, entry.Offset)
 	}
 }
@@ -169,20 +180,23 @@ func diffEntryListsByOffset(list1 []AggregatorLogEntry, list2 []AggregatorLogEnt
 func getConsumedNotReadMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	consumed := filterConsumedMessages(entries)
 	read := filterByMessage(entries, "Read")
-	notRead := []AggregatorLogEntry{}
+	return diffEntryListsByOffset(consumed, read)
+}
 
-	for _, consumed := range consumed {
-		if !messageWithOffsetIn(read, consumed.Offset) {
-			notRead = append(notRead, consumed)
-		}
-	}
-	return notRead
+func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	read := filterByMessage(entries, "Read")
+	whitelisted := filterByMessage(entries, "Organization whitelisted")
+	return diffEntryListsByOffset(read, whitelisted)
 }
 
 func printConsumedNotRead(entries []AggregatorLogEntry) {
 	notRead := getConsumedNotReadMessages(entries)
-
 	printConsumedEntries(entries, notRead)
+}
+
+func printAggregatorNotWhitelisted(entries []AggregatorLogEntry) {
+	notWhitelisted := getNotWhitelistedMessages(entries)
+	printReadEntries(entries, notWhitelisted)
 }
 
 func analyse() {
