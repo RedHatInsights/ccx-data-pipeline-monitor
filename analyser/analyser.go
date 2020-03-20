@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
+
+	"github.com/logrusorgru/aurora"
 )
 
 type PipelineLogEntry struct {
@@ -130,7 +133,7 @@ func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEn
 	printStatisticLine(colorizer, "Stored", stored)
 }
 
-func printConsumedEntry(entry AggregatorLogEntry) {
+func printConsumedEntry(colorizer aurora.Aurora, entry AggregatorLogEntry) {
 	fmt.Printf("%s %s %s %d\n", entry.Time, entry.Group, entry.Topic, entry.Offset)
 }
 
@@ -138,7 +141,7 @@ func printReadEntry(entry AggregatorLogEntry) {
 	fmt.Printf("%s %s %s %d %d %s\n", entry.Time, entry.Group, entry.Topic, entry.Offset, entry.Organization, entry.Cluster)
 }
 
-func printErrorsForMessageWithOffset(entries []AggregatorLogEntry, offset int) {
+func printErrorsForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == "error" {
 			fmt.Printf("\t%s %s\n", entry.Time, entry.Error)
@@ -147,17 +150,17 @@ func printErrorsForMessageWithOffset(entries []AggregatorLogEntry, offset int) {
 	}
 }
 
-func printConsumedEntries(entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
+func printConsumedEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
 	for _, entry := range notRead {
-		printConsumedEntry(entry)
-		printErrorsForMessageWithOffset(entries, entry.Offset)
+		printConsumedEntry(colorizer, entry)
+		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
 	}
 }
 
-func printReadEntries(entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
+func printReadEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
 	for _, entry := range notRead {
 		printReadEntry(entry)
-		printErrorsForMessageWithOffset(entries, entry.Offset)
+		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
 	}
 }
 
@@ -192,14 +195,14 @@ func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntr
 	return diffEntryListsByOffset(read, whitelisted)
 }
 
-func printConsumedNotRead(entries []AggregatorLogEntry) {
+func printConsumedNotRead(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	notRead := getConsumedNotReadMessages(entries)
-	printConsumedEntries(entries, notRead)
+	printConsumedEntries(colorizer, entries, notRead)
 }
 
-func printAggregatorNotWhitelisted(entries []AggregatorLogEntry) {
+func printAggregatorNotWhitelisted(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	notWhitelisted := getNotWhitelistedMessages(entries)
-	printReadEntries(entries, notWhitelisted)
+	printReadEntries(colorizer, entries, notWhitelisted)
 }
 
 func analyse() {
@@ -216,7 +219,6 @@ func analyse() {
 		log.Fatal(err)
 	}
 	fmt.Println("Read", len(entries2), "entries")
-	printConsumedNotRead(entries2)
 }
 
 func ReadAggregatorLogFiles() (int, error) {
@@ -238,4 +240,16 @@ func PrintAggregatorStatistic(colorizer aurora.Aurora) {
 		return
 	}
 	printAggregatorStatistic(colorizer, aggregatorEntries)
+}
+
+func PrintAggregatorConsumedNotReadMessages(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	printConsumedNotRead(colorizer, aggregatorEntries)
 }

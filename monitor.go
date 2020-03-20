@@ -87,6 +87,7 @@ var simpleCommands = []simpleCommand{
 	{"license", commands.PrintLicense},
 	{"authors", commands.PrintAuthors},
 	{"load logs", commands.LoadLogs},
+	{"aggregator logs", commands.DisplayAggregatorLogs},
 	{"aggregator statistic", commands.DisplayAggregatorStatistic},
 }
 
@@ -121,6 +122,7 @@ func completer(in prompt.Document) []prompt.Suggest {
 
 		{Text: "load", Description: "load given object or objects"},
 		{Text: "aggregator", Description: "aggregator-related commands"},
+		{Text: "pipeline", Description: "pipeline-related commands"},
 	}
 
 	secondWord := make(map[string][]prompt.Suggest)
@@ -132,6 +134,7 @@ func completer(in prompt.Document) []prompt.Suggest {
 
 	// aggregator-related operations
 	secondWord["aggregator"] = []prompt.Suggest{
+		{Text: "logs", Description: "display aggregator logs"},
 		{Text: "statistic", Description: "display aggregator statistic"},
 	}
 

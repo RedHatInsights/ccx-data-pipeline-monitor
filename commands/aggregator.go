@@ -28,3 +28,20 @@ func DisplayAggregatorStatistic() {
 	fmt.Println(colorizer.Magenta("Aggregator statistic"))
 	analyser.PrintAggregatorStatistic(colorizer)
 }
+
+func DisplayAggregatorLogs() {
+	fmt.Println(colorizer.Magenta("Aggregator logs"))
+	fmt.Println(colorizer.Cyan("1."), "read but not consumed")
+	fmt.Println(colorizer.Cyan("2."), "consumed but not whitelisted")
+	fmt.Println(colorizer.Cyan("3."), "whitelisted but not marshalled")
+	fmt.Println(colorizer.Cyan("4."), "marshalled but not checked")
+	fmt.Println(colorizer.Cyan("5."), "checked but not stored\n")
+
+	which := prompt.Input("selection: ", NoOpCompleter)
+	switch which {
+	case "1":
+		analyser.PrintAggregatorConsumedNotReadMessages(colorizer)
+	default:
+		fmt.Println(colorizer.Red("wrong input"))
+	}
+}
