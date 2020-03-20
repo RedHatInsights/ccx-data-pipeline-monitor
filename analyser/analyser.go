@@ -156,6 +156,16 @@ func messageWithOffsetIn(entries []AggregatorLogEntry, offset int) bool {
 	return false
 }
 
+func diffEntryListsByOffset(list1 []AggregatorLogEntry, list2 []AggregatorLogEntry) []AggregatorLogEntry {
+	diff := []AggregatorLogEntry{}
+	for _, element := range list1 {
+		if !messageWithOffsetIn(list2, element.Offset) {
+			diff = append(diff, element)
+		}
+	}
+	return diff
+}
+
 func getConsumedNotReadMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	consumed := filterConsumedMessages(entries)
 	read := filterByMessage(entries, "Read")
