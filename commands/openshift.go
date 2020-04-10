@@ -24,12 +24,23 @@ import (
 
 func TryToLogin(url string, ocLogin string) bool {
 	stdout, stderr, err := oc.Login(url, ocLogin)
-	if err == nil {
-		fmt.Println(colorizer.Green("\nDone: you have been loged in to OpenShift"))
-		return true
+	if err != nil {
+		fmt.Println(colorizer.Red("\nUnable to login to OpenShift"))
+		fmt.Println(stdout)
+		fmt.Println(stderr)
+		return false
 	}
-	fmt.Println(colorizer.Red("\nUnable to login to OpenShift"))
+	fmt.Println(colorizer.Green("\nDone: you have been loged in to OpenShift"))
+	return true
+}
+
+func GetPods() {
+	stdout, stderr, err := oc.GetPods()
+	if err != nil {
+		fmt.Println(colorizer.Red("\nUnable to get pods"))
+		fmt.Println(stdout)
+		fmt.Println(stderr)
+	}
+	fmt.Println(colorizer.Blue("List of available pods"))
 	fmt.Println(stdout)
-	fmt.Println(stderr)
-	return false
 }

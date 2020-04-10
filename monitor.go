@@ -78,6 +78,7 @@ var simpleCommands = []simpleCommand{
 	{"license", commands.PrintLicense},
 	{"authors", commands.PrintAuthors},
 	{"status", func() { commands.DisplayStatus(loggedIn) }},
+	{"get pods", commands.GetPods},
 	{"load logs", commands.LoadLogs},
 	{"aggregator logs", commands.DisplayAggregatorLogs},
 	{"aggregator statistic", commands.DisplayAggregatorStatistic},
@@ -109,8 +110,10 @@ func completer(in prompt.Document) []prompt.Suggest {
 		{Text: "copyright", Description: "displays copyright notice"},
 		{Text: "license", Description: "displays license used by this project"},
 		{Text: "authors", Description: "displays list of authors"},
+		{Text: "status", Description: "displays status"},
 
 		{Text: "login", Description: "provide login info"},
+		{Text: "get pods", Description: "get list of available pods"},
 
 		{Text: "load", Description: "load given object or objects"},
 		{Text: "aggregator", Description: "aggregator-related commands"},
