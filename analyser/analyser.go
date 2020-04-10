@@ -134,6 +134,9 @@ func printStatisticLine(colorizer aurora.Aurora, what string, entries []Aggregat
 	fmt.Printf("%-12s %s messages\n", what, colorizer.Blue(e))
 }
 
+func printPipelineStatistic(colorizer aurora.Aurora, entries []PipelineLogEntry) {
+}
+
 func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	consumed := filterConsumedMessages(entries)
 	read := filterByMessage(entries, "Read")
@@ -278,4 +281,16 @@ func PrintAggregatorConsumedNotReadMessages(colorizer aurora.Aurora) {
 		return
 	}
 	printConsumedNotRead(colorizer, aggregatorEntries)
+}
+
+func PrintPipelineStatistic(colorizer aurora.Aurora) {
+	if pipelineEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(pipelineEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	printPipelineStatistic(colorizer, pipelineEntries)
 }
