@@ -78,6 +78,9 @@ var simpleCommands = []simpleCommand{
 	{"license", commands.PrintLicense},
 	{"authors", commands.PrintAuthors},
 	{"status", func() { commands.DisplayStatus(loggedIn) }},
+	{"get pods", commands.GetPods},
+	{"get aggregator", commands.GetAggregatorLogs},
+	{"get pipeline", commands.GetPipelineLogs},
 	{"load logs", commands.LoadLogs},
 	{"aggregator logs", commands.DisplayAggregatorLogs},
 	{"aggregator statistic", commands.DisplayAggregatorStatistic},
@@ -109,8 +112,12 @@ func completer(in prompt.Document) []prompt.Suggest {
 		{Text: "copyright", Description: "displays copyright notice"},
 		{Text: "license", Description: "displays license used by this project"},
 		{Text: "authors", Description: "displays list of authors"},
+		{Text: "status", Description: "displays status"},
 
 		{Text: "login", Description: "provide login info"},
+		{Text: "get pods", Description: "get list of available pods"},
+		{Text: "get aggregator", Description: "retrieve logs from aggregator pods"},
+		{Text: "get pipeline", Description: "retrieve logs from ccx-data-pipeline pods"},
 
 		{Text: "load", Description: "load given object or objects"},
 		{Text: "aggregator", Description: "aggregator-related commands"},
@@ -118,6 +125,13 @@ func completer(in prompt.Document) []prompt.Suggest {
 	}
 
 	secondWord := make(map[string][]prompt.Suggest)
+
+	// oc get
+	secondWord["get"] = []prompt.Suggest{
+		{Text: "pods", Description: "list of pods"},
+		{Text: "aggregator", Description: "get aggregator logs"},
+		{Text: "pipeline", Description: "get pipeline logs"},
+	}
 
 	// loading objects
 	secondWord["load"] = []prompt.Suggest{
