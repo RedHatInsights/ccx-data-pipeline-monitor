@@ -171,7 +171,7 @@ func loadConfiguration(defaultConfigName string, envVar string) error {
 		viper.AddConfigPath(directory)
 	} else {
 		// parse the configuration
-		viper.SetConfigName("config")
+		viper.SetConfigName(defaultConfigName)
 		viper.AddConfigPath(".")
 	}
 	defer log.Println("Done")
