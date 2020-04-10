@@ -19,29 +19,15 @@ package commands
 import (
 	"fmt"
 
+	// "github.com/c-bata/go-prompt"
+
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/analyser"
 )
 
-func loadAggregatorLogs() {
-	fmt.Println(colorizer.Blue("Aggregator logs"))
-	entries, err := analyser.ReadAggregatorLogFiles()
-	if err != nil {
-		fmt.Println(colorizer.Red(err))
-	}
-	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), "entries\n")
+func DisplayPipelineStatistic() {
+	fmt.Println(colorizer.Magenta("Popeline statistic"))
+	analyser.PrintPipelineStatistic(colorizer)
 }
 
-func loadPipelineLogs() {
-	fmt.Println(colorizer.Blue("CCX data pipeline logs"))
-	entries, err := analyser.ReadPipelineLogFiles()
-	if err != nil {
-		fmt.Println(colorizer.Red(err))
-	}
-	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), "entries\n")
-}
-
-func LoadLogs() {
-	fmt.Println(colorizer.Magenta("Loading logs"))
-	loadAggregatorLogs()
-	loadPipelineLogs()
+func DisplayPipelineLogs() {
 }

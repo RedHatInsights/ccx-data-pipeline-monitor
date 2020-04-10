@@ -21,12 +21,8 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/oc"
-)
-
-const (
-	aggregatorLogFileName = "aggregator.log"
-	pipelineLogFileName   = "pipeline.log"
 )
 
 var aggregatorPod string = ""
@@ -106,7 +102,7 @@ func GetAggregatorLogs() {
 		fmt.Println(colorizer.Red("Aggregator pod was not found"))
 		return
 	}
-	GetLogs(aggregatorPod, aggregatorLogFileName)
+	GetLogs(aggregatorPod, config.AggregatorLogFileName)
 
 }
 
@@ -115,5 +111,5 @@ func GetPipelineLogs() {
 		fmt.Println(colorizer.Red("Pipeline pod was not found"))
 		return
 	}
-	GetLogs(pipelinePod, pipelineLogFileName)
+	GetLogs(pipelinePod, config.PipelineLogFileName)
 }

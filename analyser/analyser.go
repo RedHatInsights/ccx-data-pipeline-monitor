@@ -21,8 +21,11 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/logrusorgru/aurora"
+
+	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 )
 
 type PipelineLogEntry struct {
@@ -47,6 +50,7 @@ type AggregatorLogEntry struct {
 }
 
 var aggregatorEntries []AggregatorLogEntry = nil
+var pipelineEntries []PipelineLogEntry = nil
 
 func readPipelineLogFile(filename string) ([]PipelineLogEntry, error) {
 	entries := []PipelineLogEntry{}
@@ -115,6 +119,17 @@ func filterConsumedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	return consumed
 }
 
+func filterPipelineMessagesByMessage(entries []PipelineLogEntry, prefix string) []PipelineLogEntry {
+	filtered := []PipelineLogEntry{}
+
+	for _, entry := range entries {
+		if strings.HasPrefix(entry.Message, prefix) {
+			filtered = append(filtered, entry)
+		}
+	}
+	return filtered
+}
+
 func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorLogEntry {
 	filtered := []AggregatorLogEntry{}
 
@@ -129,6 +144,31 @@ func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorL
 func printStatisticLine(colorizer aurora.Aurora, what string, entries []AggregatorLogEntry) {
 	e := strconv.Itoa(len(entries))
 	fmt.Printf("%-12s %s messages\n", what, colorizer.Blue(e))
+}
+
+func printStatisticLinePipeline(colorizer aurora.Aurora, what string, entries []PipelineLogEntry) {
+	e := strconv.Itoa(len(entries))
+	fmt.Printf("%-26s %s messages\n", what, colorizer.Blue(e))
+}
+
+func printPipelineStatistic(colorizer aurora.Aurora, entries []PipelineLogEntry) {
+	validated1 := filterPipelineMessagesByMessage(entries, "JSON schema validated")
+	validated2 := filterPipelineMessagesByMessage(entries, "Identity schema validated")
+	downloaded := filterPipelineMessagesByMessage(entries, "Downloading ")
+	saved := filterPipelineMessagesByMessage(entries, "Saved ")
+	sendStart := filterPipelineMessagesByMessage(entries, "Sending response to the ")
+	sendSuccess := filterPipelineMessagesByMessage(entries, "Message has been sent successfully")
+	contextRetrieved := filterPipelineMessagesByMessage(entries, "Message context: ")
+	success := filterPipelineMessagesByMessage(entries, "Status: Success; ")
+
+	printStatisticLinePipeline(colorizer, "JSON schema validated", validated1)
+	printStatisticLinePipeline(colorizer, "Identity schema validated", validated2)
+	printStatisticLinePipeline(colorizer, "Downloaded", downloaded)
+	printStatisticLinePipeline(colorizer, "Saved", saved)
+	printStatisticLinePipeline(colorizer, "Sending start", sendStart)
+	printStatisticLinePipeline(colorizer, "Sending successful", sendSuccess)
+	printStatisticLinePipeline(colorizer, "Context retrieved", contextRetrieved)
+	printStatisticLinePipeline(colorizer, "Success", success)
 }
 
 func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
@@ -228,16 +268,25 @@ func analyse() {
 		fmt.Println(entries)
 	*/
 
-	entries2, err := readAggregatorLogFile("aggregator3.log")
+	entries2, err := readAggregatorLogFile(config.AggregatorLogFileName)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("Read", len(entries2), "entries")
 }
 
+func ReadPipelineLogFiles() (int, error) {
+	var err error
+	pipelineEntries, err = readPipelineLogFile(config.PipelineLogFileName)
+	if err != nil {
+		return 0, err
+	}
+	return len(pipelineEntries), nil
+}
+
 func ReadAggregatorLogFiles() (int, error) {
 	var err error
-	aggregatorEntries, err = readAggregatorLogFile("aggregator3.log")
+	aggregatorEntries, err = readAggregatorLogFile(config.AggregatorLogFileName)
 	if err != nil {
 		return 0, err
 	}
@@ -266,4 +315,16 @@ func PrintAggregatorConsumedNotReadMessages(colorizer aurora.Aurora) {
 		return
 	}
 	printConsumedNotRead(colorizer, aggregatorEntries)
+}
+
+func PrintPipelineStatistic(colorizer aurora.Aurora) {
+	if pipelineEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(pipelineEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	printPipelineStatistic(colorizer, pipelineEntries)
 }
