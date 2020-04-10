@@ -84,6 +84,8 @@ var simpleCommands = []simpleCommand{
 	{"load logs", commands.LoadLogs},
 	{"aggregator logs", commands.DisplayAggregatorLogs},
 	{"aggregator statistic", commands.DisplayAggregatorStatistic},
+	{"pipeline logs", commands.DisplayPipelineLogs},
+	{"pipeline statistic", commands.DisplayPipelineStatistic},
 }
 
 func executeFixedCommand(t string) {
@@ -142,6 +144,12 @@ func completer(in prompt.Document) []prompt.Suggest {
 	secondWord["aggregator"] = []prompt.Suggest{
 		{Text: "logs", Description: "display aggregator logs"},
 		{Text: "statistic", Description: "display aggregator statistic"},
+	}
+
+	// pipeline-related operations
+	secondWord["pipeline"] = []prompt.Suggest{
+		{Text: "logs", Description: "display pipeline logs"},
+		{Text: "statistic", Description: "display pipeline statistic"},
 	}
 
 	emptySuggest := []prompt.Suggest{}
