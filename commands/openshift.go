@@ -18,9 +18,15 @@ package commands
 
 import (
 	"fmt"
+	"io/ioutil"
 	"strings"
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/oc"
+)
+
+const (
+	aggregatorLogFileName = "aggregator.log"
+	pipelineLogFileName   = "pipeline.log"
 )
 
 var aggregatorPod string = ""
@@ -54,10 +60,10 @@ func GetPods() {
 	pipelinePod = ""
 	for _, line := range lines {
 		if strings.HasPrefix(line, "ccx-data-pipeline") && !strings.HasPrefix(line, "ccx-data-pipeline-db") {
-			pipelinePod = line
+			pipelinePod = strings.Fields(line)[0]
 		}
 		if strings.HasPrefix(line, "insights-results-aggregator") {
-			aggregatorPod = line
+			aggregatorPod = strings.Fields(line)[0]
 		}
 	}
 
@@ -84,7 +90,15 @@ func GetLogs(pod string, storeto string) {
 		return
 	}
 	fmt.Println(colorizer.Green("Logs have been read"))
-	fmt.Printf("Log file size: %d\n", len(stdout))
+	fmt.Printf("Log file size: %d bytes\n", len(stdout))
+
+	err = ioutil.WriteFile(storeto, []byte(stdout), 0644)
+	if err != nil {
+		fmt.Println(colorizer.Red("\nUnable to write logs"))
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(colorizer.Blue("Written into " + storeto))
 }
 
 func GetAggregatorLogs() {
@@ -92,7 +106,7 @@ func GetAggregatorLogs() {
 		fmt.Println(colorizer.Red("Aggregator pod was not found"))
 		return
 	}
-	GetLogs(aggregatorPod, "aggregator.log")
+	GetLogs(aggregatorPod, aggregatorLogFileName)
 
 }
 
@@ -101,5 +115,5 @@ func GetPipelineLogs() {
 		fmt.Println(colorizer.Red("Pipeline pod was not found"))
 		return
 	}
-	GetLogs(pipelinePod, "pipeline.log")
+	GetLogs(pipelinePod, pipelineLogFileName)
 }
