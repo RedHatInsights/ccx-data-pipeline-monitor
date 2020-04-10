@@ -23,6 +23,8 @@ import (
 	"strconv"
 
 	"github.com/logrusorgru/aurora"
+
+	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 )
 
 type PipelineLogEntry struct {
@@ -228,7 +230,7 @@ func analyse() {
 		fmt.Println(entries)
 	*/
 
-	entries2, err := readAggregatorLogFile("aggregator3.log")
+	entries2, err := readAggregatorLogFile(config.AggregatorLogFileName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -237,7 +239,7 @@ func analyse() {
 
 func ReadAggregatorLogFiles() (int, error) {
 	var err error
-	aggregatorEntries, err = readAggregatorLogFile("aggregator3.log")
+	aggregatorEntries, err = readAggregatorLogFile(config.AggregatorLogFileName)
 	if err != nil {
 		return 0, err
 	}
