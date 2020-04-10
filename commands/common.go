@@ -52,3 +52,13 @@ func Quit() {
 	fmt.Println(colorizer.Magenta("Quitting"))
 	os.Exit(0)
 }
+
+// DisplayStatus displays current status (login, logs etc.)
+func DisplayStatus(loggedIn bool) {
+	fmt.Print("Logged into OpenShift: ")
+	if loggedIn {
+		fmt.Println(colorizer.Green("yes"))
+	} else {
+		fmt.Println(colorizer.Red("no"))
+	}
+}
