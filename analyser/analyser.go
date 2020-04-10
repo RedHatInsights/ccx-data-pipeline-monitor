@@ -49,6 +49,7 @@ type AggregatorLogEntry struct {
 }
 
 var aggregatorEntries []AggregatorLogEntry = nil
+var pipelineEntries []PipelineLogEntry = nil
 
 func readPipelineLogFile(filename string) ([]PipelineLogEntry, error) {
 	entries := []PipelineLogEntry{}
@@ -235,6 +236,15 @@ func analyse() {
 		log.Fatal(err)
 	}
 	fmt.Println("Read", len(entries2), "entries")
+}
+
+func ReadPipelineLogFiles() (int, error) {
+	var err error
+	pipelineEntries, err = readPipelineLogFile(config.PipelineLogFileName)
+	if err != nil {
+		return 0, err
+	}
+	return len(pipelineEntries), nil
 }
 
 func ReadAggregatorLogFiles() (int, error) {

@@ -22,11 +22,26 @@ import (
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/analyser"
 )
 
-func LoadLogs() {
-	fmt.Println(colorizer.Magenta("Loading logs"))
+func loadAggregatorLogs() {
+	fmt.Println(colorizer.Blue("Aggregator logs"))
 	entries, err := analyser.ReadAggregatorLogFiles()
 	if err != nil {
 		fmt.Println(colorizer.Red(err))
 	}
-	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), "entries")
+	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), "entries\n")
+}
+
+func loadPipelineLogs() {
+	fmt.Println(colorizer.Blue("CCX data pipeline logs"))
+	entries, err := analyser.ReadPipelineLogFiles()
+	if err != nil {
+		fmt.Println(colorizer.Red(err))
+	}
+	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), "entries\n")
+}
+
+func LoadLogs() {
+	fmt.Println(colorizer.Magenta("Loading logs"))
+	loadAggregatorLogs()
+	loadPipelineLogs()
 }
