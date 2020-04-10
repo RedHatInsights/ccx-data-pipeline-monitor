@@ -50,6 +50,10 @@ func GetPods() (string, string, error) {
 	return Command("get", "pods")
 }
 
+func GetLogs(pod string) (string, string, error) {
+	return Command("logs", pod)
+}
+
 func getToken(arg string) string {
 	const tokenPart = "--token="
 
