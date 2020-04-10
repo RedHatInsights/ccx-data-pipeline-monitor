@@ -21,6 +21,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/logrusorgru/aurora"
 
@@ -118,6 +119,17 @@ func filterConsumedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	return consumed
 }
 
+func filterPipelineMessagesByMessage(entries []PipelineLogEntry, prefix string) []PipelineLogEntry {
+	filtered := []PipelineLogEntry{}
+
+	for _, entry := range entries {
+		if strings.HasPrefix(entry.Message, prefix) {
+			filtered = append(filtered, entry)
+		}
+	}
+	return filtered
+}
+
 func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorLogEntry {
 	filtered := []AggregatorLogEntry{}
 
@@ -134,7 +146,29 @@ func printStatisticLine(colorizer aurora.Aurora, what string, entries []Aggregat
 	fmt.Printf("%-12s %s messages\n", what, colorizer.Blue(e))
 }
 
+func printStatisticLinePipeline(colorizer aurora.Aurora, what string, entries []PipelineLogEntry) {
+	e := strconv.Itoa(len(entries))
+	fmt.Printf("%-26s %s messages\n", what, colorizer.Blue(e))
+}
+
 func printPipelineStatistic(colorizer aurora.Aurora, entries []PipelineLogEntry) {
+	validated1 := filterPipelineMessagesByMessage(entries, "JSON schema validated")
+	validated2 := filterPipelineMessagesByMessage(entries, "Identity schema validated")
+	downloaded := filterPipelineMessagesByMessage(entries, "Downloading ")
+	saved := filterPipelineMessagesByMessage(entries, "Saved ")
+	sendStart := filterPipelineMessagesByMessage(entries, "Sending response to the ")
+	sendSuccess := filterPipelineMessagesByMessage(entries, "Message has been sent successfully")
+	contextRetrieved := filterPipelineMessagesByMessage(entries, "Message context: ")
+	success := filterPipelineMessagesByMessage(entries, "Status: Success; ")
+
+	printStatisticLinePipeline(colorizer, "JSON schema validated", validated1)
+	printStatisticLinePipeline(colorizer, "Identity schema validated", validated2)
+	printStatisticLinePipeline(colorizer, "Downloaded", downloaded)
+	printStatisticLinePipeline(colorizer, "Saved", saved)
+	printStatisticLinePipeline(colorizer, "Sending start", sendStart)
+	printStatisticLinePipeline(colorizer, "Sending successful", sendSuccess)
+	printStatisticLinePipeline(colorizer, "Context retrieved", contextRetrieved)
+	printStatisticLinePipeline(colorizer, "Success", success)
 }
 
 func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
