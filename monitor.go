@@ -33,14 +33,13 @@ import (
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/commands"
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
-	"github.com/RedHatInsights/ccx-data-pipeline-monitor/oc"
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/server"
 )
 
 var openShiftConfig config.OpenShiftConfig
 
-var ocLogin string
 var colorizer aurora.Aurora
+var loggedIn bool = false
 
 // BuildVersion contains the major.minor version of the CLI client
 var BuildVersion string = "*not set*"
@@ -52,22 +51,14 @@ func printVersion() {
 	fmt.Println(colorizer.Blue("Insights operator CLI client "), "version", colorizer.Yellow(BuildVersion), "compiled", colorizer.Yellow(BuildTime))
 }
 
-func tryToLogin(ocLogin string) {
-	stdout, stderr, err := oc.Login(openShiftConfig.URL, ocLogin)
-	fmt.Println(stdout)
-	fmt.Println(stderr)
-	fmt.Println(err == nil)
-	fmt.Println(colorizer.Blue("\nDone"))
-}
-
 func login() {
 	fmt.Print("login: ")
 	p, err := terminal.ReadPassword(0)
 	if err != nil {
 		fmt.Println(colorizer.Red("not set"))
 	} else {
-		ocLogin = string(p)
-		tryToLogin(ocLogin)
+		ocLogin := string(p)
+		loggedIn = commands.TryToLogin(openShiftConfig.URL, ocLogin)
 	}
 }
 
@@ -86,6 +77,7 @@ var simpleCommands = []simpleCommand{
 	{"version", printVersion},
 	{"license", commands.PrintLicense},
 	{"authors", commands.PrintAuthors},
+	{"status", func() { commands.DisplayStatus(loggedIn) }},
 	{"load logs", commands.LoadLogs},
 	{"aggregator logs", commands.DisplayAggregatorLogs},
 	{"aggregator statistic", commands.DisplayAggregatorStatistic},
