@@ -93,9 +93,10 @@ func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorL
 	return filtered
 }
 
-func printStatisticLine(colorizer aurora.Aurora, what string, entries []AggregatorLogEntry) {
+func printStatisticLine(colorizer aurora.Aurora, what string, entries []AggregatorLogEntry, nextEntries []AggregatorLogEntry) {
 	e := strconv.Itoa(len(entries))
-	fmt.Printf("%-12s %s messages\n", what, colorizer.Blue(e))
+	x := strconv.Itoa(len(nextEntries) - len(entries))
+	fmt.Printf("%-12s %s messages (%s excluded)\n", what, colorizer.Blue(e), colorizer.Red(x))
 }
 
 func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
@@ -106,12 +107,12 @@ func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEn
 	checked := filterByMessage(entries, "Time ok")
 	stored := filterByMessage(entries, "Stored")
 
-	printStatisticLine(colorizer, "Consumed", consumed)
-	printStatisticLine(colorizer, "Read", read)
-	printStatisticLine(colorizer, "Whitelisted", whitelisted)
-	printStatisticLine(colorizer, "Marshalled", marshalled)
-	printStatisticLine(colorizer, "Checked", checked)
-	printStatisticLine(colorizer, "Stored", stored)
+	printStatisticLine(colorizer, "Consumed", consumed, consumed)
+	printStatisticLine(colorizer, "Read", read, consumed)
+	printStatisticLine(colorizer, "Whitelisted", whitelisted, read)
+	printStatisticLine(colorizer, "Marshalled", marshalled, whitelisted)
+	printStatisticLine(colorizer, "Checked", checked, marshalled)
+	printStatisticLine(colorizer, "Stored", stored, checked)
 }
 
 func printConsumedEntry(colorizer aurora.Aurora, entry AggregatorLogEntry) {
