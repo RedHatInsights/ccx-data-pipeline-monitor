@@ -129,7 +129,22 @@ func printErrorsForMessageWithOffset(colorizer aurora.Aurora, entries []Aggregat
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == "error" {
 			fmt.Printf("\t%s %s\n", entry.Time, colorizer.Red(entry.Error))
+		}
+	}
+}
 
+func printMessageForErrorsMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
+	for _, entry := range entries {
+		if entry.Offset == offset && entry.Level == "error" {
+			fmt.Printf("\t%s %s\n", entry.Time, colorizer.Red(entry.Message))
+		}
+	}
+}
+
+func printInfoForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
+	for _, entry := range entries {
+		if entry.Offset == offset && entry.Level == "info" {
+			fmt.Printf("\t%s %s\n", entry.Time, colorizer.Red(entry.Error))
 		}
 	}
 }
@@ -144,7 +159,7 @@ func printConsumedEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry,
 func printReadEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
 	for i, entry := range notRead {
 		printReadEntry(colorizer, i+1, entry)
-		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
+		printMessageForErrorsMessageWithOffset(colorizer, entries, entry.Offset)
 	}
 }
 
