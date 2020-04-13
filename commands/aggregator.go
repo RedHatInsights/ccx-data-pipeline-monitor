@@ -41,7 +41,15 @@ func DisplayAggregatorLogs() {
 	switch which {
 	case "1":
 		analyser.PrintAggregatorConsumedNotReadMessages(colorizer)
+	case "2":
+		analyser.PrintAggregatorConsumedNotWhitelisted(colorizer)
+	case "3":
+		analyser.PrintAggregatorWhitelistedNotMarshalled(colorizer)
+	case "4":
+		analyser.PrintAggregatorMarshalledNotChecked(colorizer)
+	case "5":
+		analyser.PrintAggregatorCheckedNotStored(colorizer)
 	default:
-		fmt.Println(colorizer.Red("wrong input"))
+		fmt.Println(colorizer.Red("wrong input, skipping"))
 	}
 }
