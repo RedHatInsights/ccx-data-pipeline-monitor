@@ -120,14 +120,15 @@ func printConsumedEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry
 	fmt.Printf("%s %s %s %s %d\n", colorizer.Blue(e), entry.Time, entry.Group, entry.Topic, entry.Offset)
 }
 
-func printReadEntry(entry AggregatorLogEntry) {
-	fmt.Printf("%s %s %s %d %d %s\n", entry.Time, entry.Group, entry.Topic, entry.Offset, entry.Organization, entry.Cluster)
+func printReadEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
+	e := strconv.Itoa(i)
+	fmt.Printf("%s %s %s %s %d %d %s\n", colorizer.Blue(e), entry.Time, entry.Group, entry.Topic, entry.Offset, entry.Organization, entry.Cluster)
 }
 
 func printErrorsForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == "error" {
-			fmt.Printf("\t%s %s\n", entry.Time, entry.Error)
+			fmt.Printf("\t%s %s\n", entry.Time, colorizer.Red(entry.Error))
 
 		}
 	}
@@ -141,8 +142,8 @@ func printConsumedEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry,
 }
 
 func printReadEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
-	for _, entry := range notRead {
-		printReadEntry(entry)
+	for i, entry := range notRead {
+		printReadEntry(colorizer, i+1, entry)
 		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
 	}
 }
@@ -183,7 +184,7 @@ func printConsumedNotRead(colorizer aurora.Aurora, entries []AggregatorLogEntry)
 	printConsumedEntries(colorizer, entries, notRead)
 }
 
-func printAggregatorNotWhitelisted(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
+func printNotWhitelisted(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	notWhitelisted := getNotWhitelistedMessages(entries)
 	printReadEntries(colorizer, entries, notWhitelisted)
 }
@@ -219,4 +220,16 @@ func PrintAggregatorConsumedNotReadMessages(colorizer aurora.Aurora) {
 		return
 	}
 	printConsumedNotRead(colorizer, aggregatorEntries)
+}
+
+func PrintAggregatorConsumedNotWhitelisted(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	printNotWhitelisted(colorizer, aggregatorEntries)
 }
