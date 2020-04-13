@@ -102,6 +102,7 @@ func printPipelineStatistic(colorizer aurora.Aurora, entries []PipelineLogEntry)
 	printStatisticLinePipeline(colorizer, "Success", success)
 }
 
+// ReadPipelineLogFiles reads all log files gathered from CCX data pipeline pods.
 func ReadPipelineLogFiles() (int, error) {
 	var err error
 	pipelineEntries, err = readPipelineLogFile(config.PipelineLogFileName)
