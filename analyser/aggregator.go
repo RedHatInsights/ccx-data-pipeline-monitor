@@ -194,6 +194,24 @@ func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntr
 	return diffEntryListsByOffset(read, whitelisted)
 }
 
+func getNotMarshalledMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	whitelisted := filterByMessage(entries, "Organization whitelisted")
+	marshalled := filterByMessage(entries, "Marshalled")
+	return diffEntryListsByOffset(whitelisted, marshalled)
+}
+
+func getNotCheckedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	marshalled := filterByMessage(entries, "Marshalled")
+	checked := filterByMessage(entries, "Time ok")
+	return diffEntryListsByOffset(marshalled, checked)
+}
+
+func getNotStoredMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	checked := filterByMessage(entries, "Time ok")
+	stored := filterByMessage(entries, "Stored")
+	return diffEntryListsByOffset(checked, stored)
+}
+
 func printConsumedNotRead(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	notRead := getConsumedNotReadMessages(entries)
 	printConsumedEntries(colorizer, entries, notRead)
@@ -202,6 +220,21 @@ func printConsumedNotRead(colorizer aurora.Aurora, entries []AggregatorLogEntry)
 func printNotWhitelisted(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	notWhitelisted := getNotWhitelistedMessages(entries)
 	printReadEntries(colorizer, entries, notWhitelisted)
+}
+
+func printWhitelistedNotMarshalled(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
+	notMarshalled := getNotMarshalledMessages(entries)
+	printReadEntries(colorizer, entries, notMarshalled)
+}
+
+func printMarshalledNotChecked(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
+	notChecked := getNotCheckedMessages(entries)
+	printReadEntries(colorizer, entries, notChecked)
+}
+
+func printCheckedNotStored(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
+	notStored := getNotStoredMessages(entries)
+	printReadEntries(colorizer, entries, notStored)
 }
 
 func ReadAggregatorLogFiles() (int, error) {
@@ -258,7 +291,7 @@ func PrintAggregatorWhitelistedNotMarshalled(colorizer aurora.Aurora) {
 		fmt.Println(colorizer.Red("empty log"))
 		return
 	}
-	//printWhitelistedNotMarshalled(colorizer, aggregatorEntries)
+	printWhitelistedNotMarshalled(colorizer, aggregatorEntries)
 }
 
 func PrintAggregatorMarshalledNotChecked(colorizer aurora.Aurora) {
@@ -270,7 +303,7 @@ func PrintAggregatorMarshalledNotChecked(colorizer aurora.Aurora) {
 		fmt.Println(colorizer.Red("empty log"))
 		return
 	}
-	//printMarshalledNotChecked(colorizer, aggregatorEntries)
+	printMarshalledNotChecked(colorizer, aggregatorEntries)
 }
 
 func PrintAggregatorCheckedNotStored(colorizer aurora.Aurora) {
@@ -282,5 +315,5 @@ func PrintAggregatorCheckedNotStored(colorizer aurora.Aurora) {
 		fmt.Println(colorizer.Red("empty log"))
 		return
 	}
-	//printCheckedNotStored(colorizer, aggregatorEntries)
+	printCheckedNotStored(colorizer, aggregatorEntries)
 }
