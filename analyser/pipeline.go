@@ -28,6 +28,7 @@ import (
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 )
 
+// PipelineLogEntry represents one log entry (record) read from log file.
 type PipelineLogEntry struct {
 	Level    string `json:"levelname"`
 	Time     string `json:"asctime"`
