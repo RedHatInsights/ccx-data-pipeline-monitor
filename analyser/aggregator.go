@@ -250,6 +250,7 @@ func ReadAggregatorLogFiles() (int, error) {
 	return len(aggregatorEntries), nil
 }
 
+// printAggregatorStatistic prints statistic gathered from aggregator logs.
 func PrintAggregatorStatistic(colorizer aurora.Aurora) {
 	if aggregatorEntries == nil {
 		fmt.Println(colorizer.Red("logs are not loaded"))
