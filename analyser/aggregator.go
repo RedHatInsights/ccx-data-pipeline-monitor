@@ -233,3 +233,39 @@ func PrintAggregatorConsumedNotWhitelisted(colorizer aurora.Aurora) {
 	}
 	printNotWhitelisted(colorizer, aggregatorEntries)
 }
+
+func PrintAggregatorWhitelistedNotMarshalled(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	//printWhitelistedNotMarshalled(colorizer, aggregatorEntries)
+}
+
+func PrintAggregatorMarshalledNotChecked(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	//printMarshalledNotChecked(colorizer, aggregatorEntries)
+}
+
+func PrintAggregatorCheckedNotStored(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	//printCheckedNotStored(colorizer, aggregatorEntries)
+}
