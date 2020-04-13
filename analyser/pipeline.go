@@ -112,6 +112,7 @@ func ReadPipelineLogFiles() (int, error) {
 	return len(pipelineEntries), nil
 }
 
+// PrintPipelineStatistic prints statistic gathered from CCX data pipeline logs.
 func PrintPipelineStatistic(colorizer aurora.Aurora) {
 	if pipelineEntries == nil {
 		fmt.Println(colorizer.Red("logs are not loaded"))
