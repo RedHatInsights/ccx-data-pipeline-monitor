@@ -21,20 +21,11 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/logrusorgru/aurora"
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 )
-
-type PipelineLogEntry struct {
-	Level    string `json:"levelname"`
-	Time     string `json:"asctime"`
-	Name     string `json:"name"`
-	Filename string `json:"filename"`
-	Message  string `json:"message"`
-}
 
 type AggregatorLogEntry struct {
 	Level        string `json:"level"`
@@ -50,34 +41,6 @@ type AggregatorLogEntry struct {
 }
 
 var aggregatorEntries []AggregatorLogEntry = nil
-var pipelineEntries []PipelineLogEntry = nil
-
-func readPipelineLogFile(filename string) ([]PipelineLogEntry, error) {
-	entries := []PipelineLogEntry{}
-
-	file, err := os.Open(filename)
-	if err != nil {
-		return entries, err
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		entry := PipelineLogEntry{}
-		err = json.Unmarshal([]byte(scanner.Text()), &entry)
-		if err != nil {
-			log.Println(err)
-		} else {
-			entries = append(entries, entry)
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		return entries, err
-	}
-
-	return entries, nil
-}
 
 func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 	entries := []AggregatorLogEntry{}
@@ -119,17 +82,6 @@ func filterConsumedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	return consumed
 }
 
-func filterPipelineMessagesByMessage(entries []PipelineLogEntry, prefix string) []PipelineLogEntry {
-	filtered := []PipelineLogEntry{}
-
-	for _, entry := range entries {
-		if strings.HasPrefix(entry.Message, prefix) {
-			filtered = append(filtered, entry)
-		}
-	}
-	return filtered
-}
-
 func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorLogEntry {
 	filtered := []AggregatorLogEntry{}
 
@@ -141,34 +93,10 @@ func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorL
 	return filtered
 }
 
-func printStatisticLine(colorizer aurora.Aurora, what string, entries []AggregatorLogEntry) {
+func printStatisticLine(colorizer aurora.Aurora, what string, entries []AggregatorLogEntry, nextEntries []AggregatorLogEntry) {
 	e := strconv.Itoa(len(entries))
-	fmt.Printf("%-12s %s messages\n", what, colorizer.Blue(e))
-}
-
-func printStatisticLinePipeline(colorizer aurora.Aurora, what string, entries []PipelineLogEntry) {
-	e := strconv.Itoa(len(entries))
-	fmt.Printf("%-26s %s messages\n", what, colorizer.Blue(e))
-}
-
-func printPipelineStatistic(colorizer aurora.Aurora, entries []PipelineLogEntry) {
-	validated1 := filterPipelineMessagesByMessage(entries, "JSON schema validated")
-	validated2 := filterPipelineMessagesByMessage(entries, "Identity schema validated")
-	downloaded := filterPipelineMessagesByMessage(entries, "Downloading ")
-	saved := filterPipelineMessagesByMessage(entries, "Saved ")
-	sendStart := filterPipelineMessagesByMessage(entries, "Sending response to the ")
-	sendSuccess := filterPipelineMessagesByMessage(entries, "Message has been sent successfully")
-	contextRetrieved := filterPipelineMessagesByMessage(entries, "Message context: ")
-	success := filterPipelineMessagesByMessage(entries, "Status: Success; ")
-
-	printStatisticLinePipeline(colorizer, "JSON schema validated", validated1)
-	printStatisticLinePipeline(colorizer, "Identity schema validated", validated2)
-	printStatisticLinePipeline(colorizer, "Downloaded", downloaded)
-	printStatisticLinePipeline(colorizer, "Saved", saved)
-	printStatisticLinePipeline(colorizer, "Sending start", sendStart)
-	printStatisticLinePipeline(colorizer, "Sending successful", sendSuccess)
-	printStatisticLinePipeline(colorizer, "Context retrieved", contextRetrieved)
-	printStatisticLinePipeline(colorizer, "Success", success)
+	x := strconv.Itoa(len(nextEntries) - len(entries))
+	fmt.Printf("%-12s %s messages (%s excluded)\n", what, colorizer.Blue(e), colorizer.Red(x))
 }
 
 func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
@@ -179,43 +107,62 @@ func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEn
 	checked := filterByMessage(entries, "Time ok")
 	stored := filterByMessage(entries, "Stored")
 
-	printStatisticLine(colorizer, "Consumed", consumed)
-	printStatisticLine(colorizer, "Read", read)
-	printStatisticLine(colorizer, "Whitelisted", whitelisted)
-	printStatisticLine(colorizer, "Marshalled", marshalled)
-	printStatisticLine(colorizer, "Checked", checked)
-	printStatisticLine(colorizer, "Stored", stored)
+	printStatisticLine(colorizer, "Consumed", consumed, consumed)
+	printStatisticLine(colorizer, "Read", read, consumed)
+	printStatisticLine(colorizer, "Whitelisted", whitelisted, read)
+	printStatisticLine(colorizer, "Marshalled", marshalled, whitelisted)
+	printStatisticLine(colorizer, "Checked", checked, marshalled)
+	printStatisticLine(colorizer, "Stored", stored, checked)
 }
 
-func printConsumedEntry(colorizer aurora.Aurora, entry AggregatorLogEntry) {
-	fmt.Printf("%s %s %s %d\n", entry.Time, entry.Group, entry.Topic, entry.Offset)
+func printConsumedEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
+	e := strconv.Itoa(i)
+	fmt.Printf("%5s  %s  %s  %s  %d\t", colorizer.Blue(e), colorizer.Gray(8, entry.Time), entry.Group, entry.Topic, colorizer.Cyan(entry.Offset))
 }
 
-func printReadEntry(entry AggregatorLogEntry) {
-	fmt.Printf("%s %s %s %d %d %s\n", entry.Time, entry.Group, entry.Topic, entry.Offset, entry.Organization, entry.Cluster)
+func printReadEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
+	e := strconv.Itoa(i)
+	fmt.Printf("%5s  %s  %s  %s  %d  %d  %s\t", colorizer.Blue(e), colorizer.Gray(8, entry.Time), entry.Group, entry.Topic, colorizer.Cyan(entry.Offset), colorizer.Yellow(entry.Organization), entry.Cluster)
 }
 
 func printErrorsForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == "error" {
-			fmt.Printf("\t%s %s\n", entry.Time, entry.Error)
+			fmt.Printf("\t%s  %s\n", colorizer.Gray(8, entry.Time), colorizer.Red(entry.Error))
+		}
+	}
+}
 
+func printMessageForErrorsMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
+	for _, entry := range entries {
+		if entry.Offset == offset && entry.Level == "error" {
+			fmt.Printf("\t%s  %s\n", colorizer.Gray(8, entry.Time), colorizer.Red(entry.Message))
+		}
+	}
+}
+
+func printInfoForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
+	for _, entry := range entries {
+		if entry.Offset == offset && entry.Level == "info" {
+			fmt.Printf("\t%s  %s\n", colorizer.Gray(8, entry.Time), colorizer.Red(entry.Error))
 		}
 	}
 }
 
 func printConsumedEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
-	for _, entry := range notRead {
-		printConsumedEntry(colorizer, entry)
+	for i, entry := range notRead {
+		printConsumedEntry(colorizer, i+1, entry)
 		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
 	}
+	fmt.Println()
 }
 
 func printReadEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
-	for _, entry := range notRead {
-		printReadEntry(entry)
-		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
+	for i, entry := range notRead {
+		printReadEntry(colorizer, i+1, entry)
+		printMessageForErrorsMessageWithOffset(colorizer, entries, entry.Offset)
 	}
+	fmt.Println()
 }
 
 func messageWithOffsetIn(entries []AggregatorLogEntry, offset int) bool {
@@ -249,39 +196,47 @@ func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntr
 	return diffEntryListsByOffset(read, whitelisted)
 }
 
+func getNotMarshalledMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	whitelisted := filterByMessage(entries, "Organization whitelisted")
+	marshalled := filterByMessage(entries, "Marshalled")
+	return diffEntryListsByOffset(whitelisted, marshalled)
+}
+
+func getNotCheckedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	marshalled := filterByMessage(entries, "Marshalled")
+	checked := filterByMessage(entries, "Time ok")
+	return diffEntryListsByOffset(marshalled, checked)
+}
+
+func getNotStoredMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
+	checked := filterByMessage(entries, "Time ok")
+	stored := filterByMessage(entries, "Stored")
+	return diffEntryListsByOffset(checked, stored)
+}
+
 func printConsumedNotRead(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	notRead := getConsumedNotReadMessages(entries)
 	printConsumedEntries(colorizer, entries, notRead)
 }
 
-func printAggregatorNotWhitelisted(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
+func printNotWhitelisted(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	notWhitelisted := getNotWhitelistedMessages(entries)
 	printReadEntries(colorizer, entries, notWhitelisted)
 }
 
-func analyse() {
-	/*
-		entries, err := readPipelineLogFile("pipeline2.log")
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(entries)
-	*/
-
-	entries2, err := readAggregatorLogFile(config.AggregatorLogFileName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Read", len(entries2), "entries")
+func printWhitelistedNotMarshalled(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
+	notMarshalled := getNotMarshalledMessages(entries)
+	printReadEntries(colorizer, entries, notMarshalled)
 }
 
-func ReadPipelineLogFiles() (int, error) {
-	var err error
-	pipelineEntries, err = readPipelineLogFile(config.PipelineLogFileName)
-	if err != nil {
-		return 0, err
-	}
-	return len(pipelineEntries), nil
+func printMarshalledNotChecked(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
+	notChecked := getNotCheckedMessages(entries)
+	printReadEntries(colorizer, entries, notChecked)
+}
+
+func printCheckedNotStored(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
+	notStored := getNotStoredMessages(entries)
+	printReadEntries(colorizer, entries, notStored)
 }
 
 func ReadAggregatorLogFiles() (int, error) {
@@ -317,14 +272,50 @@ func PrintAggregatorConsumedNotReadMessages(colorizer aurora.Aurora) {
 	printConsumedNotRead(colorizer, aggregatorEntries)
 }
 
-func PrintPipelineStatistic(colorizer aurora.Aurora) {
-	if pipelineEntries == nil {
+func PrintAggregatorConsumedNotWhitelisted(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
 		fmt.Println(colorizer.Red("logs are not loaded"))
 		return
 	}
-	if len(pipelineEntries) == 0 {
+	if len(aggregatorEntries) == 0 {
 		fmt.Println(colorizer.Red("empty log"))
 		return
 	}
-	printPipelineStatistic(colorizer, pipelineEntries)
+	printNotWhitelisted(colorizer, aggregatorEntries)
+}
+
+func PrintAggregatorWhitelistedNotMarshalled(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	printWhitelistedNotMarshalled(colorizer, aggregatorEntries)
+}
+
+func PrintAggregatorMarshalledNotChecked(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	printMarshalledNotChecked(colorizer, aggregatorEntries)
+}
+
+func PrintAggregatorCheckedNotStored(colorizer aurora.Aurora) {
+	if aggregatorEntries == nil {
+		fmt.Println(colorizer.Red("logs are not loaded"))
+		return
+	}
+	if len(aggregatorEntries) == 0 {
+		fmt.Println(colorizer.Red("empty log"))
+		return
+	}
+	printCheckedNotStored(colorizer, aggregatorEntries)
 }

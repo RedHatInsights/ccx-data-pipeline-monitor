@@ -31,8 +31,8 @@ func DisplayAggregatorStatistic() {
 
 func DisplayAggregatorLogs() {
 	fmt.Println(colorizer.Magenta("Aggregator logs"))
-	fmt.Println(colorizer.Cyan("1."), "read but not consumed")
-	fmt.Println(colorizer.Cyan("2."), "consumed but not whitelisted")
+	fmt.Println(colorizer.Cyan("1."), "consumed but not read")
+	fmt.Println(colorizer.Cyan("2."), "read but not whitelisted")
 	fmt.Println(colorizer.Cyan("3."), "whitelisted but not marshalled")
 	fmt.Println(colorizer.Cyan("4."), "marshalled but not checked")
 	fmt.Println(colorizer.Cyan("5."), "checked but not stored\n")
@@ -41,7 +41,15 @@ func DisplayAggregatorLogs() {
 	switch which {
 	case "1":
 		analyser.PrintAggregatorConsumedNotReadMessages(colorizer)
+	case "2":
+		analyser.PrintAggregatorConsumedNotWhitelisted(colorizer)
+	case "3":
+		analyser.PrintAggregatorWhitelistedNotMarshalled(colorizer)
+	case "4":
+		analyser.PrintAggregatorMarshalledNotChecked(colorizer)
+	case "5":
+		analyser.PrintAggregatorCheckedNotStored(colorizer)
 	default:
-		fmt.Println(colorizer.Red("wrong input"))
+		fmt.Println(colorizer.Red("wrong input, skipping"))
 	}
 }
