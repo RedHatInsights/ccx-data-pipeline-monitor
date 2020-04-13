@@ -117,18 +117,18 @@ func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEn
 
 func printConsumedEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
 	e := strconv.Itoa(i)
-	fmt.Printf("%s %s %s %s %d\n", colorizer.Blue(e), entry.Time, entry.Group, entry.Topic, entry.Offset)
+	fmt.Printf("%5s  %s  %s  %s  %d\t", colorizer.Blue(e), colorizer.Gray(8, entry.Time), entry.Group, entry.Topic, colorizer.Cyan(entry.Offset))
 }
 
 func printReadEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
 	e := strconv.Itoa(i)
-	fmt.Printf("%s %s %s %s %d %d %s\n", colorizer.Blue(e), entry.Time, entry.Group, entry.Topic, entry.Offset, entry.Organization, entry.Cluster)
+	fmt.Printf("%5s  %s  %s  %s  %d  %d  %s\t", colorizer.Blue(e), colorizer.Gray(8, entry.Time), entry.Group, entry.Topic, colorizer.Cyan(entry.Offset), colorizer.Yellow(entry.Organization), entry.Cluster)
 }
 
 func printErrorsForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == "error" {
-			fmt.Printf("\t%s %s\n", entry.Time, colorizer.Red(entry.Error))
+			fmt.Printf("\t%s  %s\n", colorizer.Gray(8, entry.Time), colorizer.Red(entry.Error))
 		}
 	}
 }
@@ -136,7 +136,7 @@ func printErrorsForMessageWithOffset(colorizer aurora.Aurora, entries []Aggregat
 func printMessageForErrorsMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == "error" {
-			fmt.Printf("\t%s %s\n", entry.Time, colorizer.Red(entry.Message))
+			fmt.Printf("\t%s  %s\n", colorizer.Gray(8, entry.Time), colorizer.Red(entry.Message))
 		}
 	}
 }
@@ -144,7 +144,7 @@ func printMessageForErrorsMessageWithOffset(colorizer aurora.Aurora, entries []A
 func printInfoForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == "info" {
-			fmt.Printf("\t%s %s\n", entry.Time, colorizer.Red(entry.Error))
+			fmt.Printf("\t%s  %s\n", colorizer.Gray(8, entry.Time), colorizer.Red(entry.Error))
 		}
 	}
 }
@@ -154,6 +154,7 @@ func printConsumedEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry,
 		printConsumedEntry(colorizer, i+1, entry)
 		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
 	}
+	fmt.Println()
 }
 
 func printReadEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
@@ -161,6 +162,7 @@ func printReadEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, not
 		printReadEntry(colorizer, i+1, entry)
 		printMessageForErrorsMessageWithOffset(colorizer, entries, entry.Offset)
 	}
+	fmt.Println()
 }
 
 func messageWithOffsetIn(entries []AggregatorLogEntry, offset int) bool {
