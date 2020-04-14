@@ -28,6 +28,7 @@ import (
 var aggregatorPod string = ""
 var pipelinePod string = ""
 
+// TryToLogin tries to login to OpenShift via oc command
 func TryToLogin(url string, ocLogin string) bool {
 	stdout, stderr, err := oc.Login(url, ocLogin)
 	if err != nil {
