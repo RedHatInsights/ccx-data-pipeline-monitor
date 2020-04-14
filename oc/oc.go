@@ -46,6 +46,7 @@ func Login(url string, arg string) (string, string, error) {
 	return Command("login", url, "--token="+token)
 }
 
+// GetPods read list of all pods via oc command
 func GetPods() (string, string, error) {
 	return Command("get", "pods")
 }
