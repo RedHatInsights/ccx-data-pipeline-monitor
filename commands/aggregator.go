@@ -35,7 +35,8 @@ func DisplayAggregatorLogs() {
 	fmt.Println(colorizer.Cyan("2."), "read but not whitelisted")
 	fmt.Println(colorizer.Cyan("3."), "whitelisted but not marshalled")
 	fmt.Println(colorizer.Cyan("4."), "marshalled but not checked")
-	fmt.Println(colorizer.Cyan("5."), "checked but not stored\n")
+	fmt.Println(colorizer.Cyan("5."), "checked but not stored")
+	fmt.Println()
 
 	which := prompt.Input("selection: ", NoOpCompleter)
 	switch which {
