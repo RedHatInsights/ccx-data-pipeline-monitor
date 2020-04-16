@@ -302,6 +302,7 @@ func PrintAggregatorWhitelistedNotMarshalled(colorizer aurora.Aurora) {
 	printWhitelistedNotMarshalled(colorizer, aggregatorEntries)
 }
 
+// PrintAggregatorMarshalledNotChecked function prints messages that can be marshalled but are not checked for any reason (improper internal structure etc.)
 func PrintAggregatorMarshalledNotChecked(colorizer aurora.Aurora) {
 	if aggregatorEntries == nil {
 		fmt.Println(colorizer.Red("logs are not loaded"))
