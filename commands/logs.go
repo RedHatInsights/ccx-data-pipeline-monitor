@@ -42,6 +42,7 @@ func loadPipelineLogs() {
 	fmt.Println()
 }
 
+// LoadLogs function loads aggregator and pipeline logs from files (stored before via oc command)
 func LoadLogs() {
 	fmt.Println(colorizer.Magenta("Loading logs"))
 	loadAggregatorLogs()
