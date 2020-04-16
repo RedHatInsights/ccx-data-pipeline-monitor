@@ -30,6 +30,7 @@ func DisplayAggregatorStatistic() {
 	analyser.PrintAggregatorStatistic(colorizer)
 }
 
+// DisplayAggregatorLogs function displays selected types of logs, for example consumed messages that were not read etc.
 func DisplayAggregatorLogs() {
 	fmt.Println(colorizer.Magenta("Aggregator logs"))
 	fmt.Println(colorizer.Cyan("1."), "consumed but not read")
