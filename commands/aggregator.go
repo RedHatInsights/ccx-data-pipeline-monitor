@@ -24,6 +24,7 @@ import (
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/analyser"
 )
 
+// DisplayAggregatorStatistic function displays statistic about logs taken from aggregator pods
 func DisplayAggregatorStatistic() {
 	fmt.Println(colorizer.Magenta("Aggregator statistic"))
 	analyser.PrintAggregatorStatistic(colorizer)
