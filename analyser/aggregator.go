@@ -240,7 +240,7 @@ func printCheckedNotStored(colorizer aurora.Aurora, entries []AggregatorLogEntry
 	printReadEntries(colorizer, entries, notStored)
 }
 
-// readAggregatorLogFiles reads all log files gathered from aggregator pods.
+// ReadAggregatorLogFiles reads all log files gathered from aggregator pods.
 func ReadAggregatorLogFiles() (int, error) {
 	var err error
 	aggregatorEntries, err = readAggregatorLogFile(config.AggregatorLogFileName)
