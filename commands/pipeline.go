@@ -24,6 +24,7 @@ import (
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/analyser"
 )
 
+// DisplayPipelineStatistic function displays statistic gathered from ccx-data-pipeline logs
 func DisplayPipelineStatistic() {
 	fmt.Println(colorizer.Magenta("Popeline statistic"))
 	analyser.PrintPipelineStatistic(colorizer)
