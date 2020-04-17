@@ -17,6 +17,7 @@ limitations under the License.
 package config
 
 const (
+	// AggregatorLogFileName is name of file used to store logs gathered from aggregator pod
 	AggregatorLogFileName = "aggregator.log"
 	PipelineLogFileName   = "pipeline.log"
 )
