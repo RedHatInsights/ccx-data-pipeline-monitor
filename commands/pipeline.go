@@ -30,5 +30,6 @@ func DisplayPipelineStatistic() {
 	analyser.PrintPipelineStatistic(colorizer)
 }
 
+// DisplayPipelineLogs function displays selected types of logs gathered from ccx-data-pipeline logs
 func DisplayPipelineLogs() {
 }
