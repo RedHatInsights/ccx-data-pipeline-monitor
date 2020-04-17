@@ -99,6 +99,7 @@ func GetLogs(pod string, storeto string) {
 	fmt.Println(colorizer.Blue("Written into " + storeto))
 }
 
+// GetAggregatorLogs function retrieves logs from aggregator pods and stores logs in file.
 func GetAggregatorLogs() {
 	if aggregatorPod == "" {
 		fmt.Println(colorizer.Red("Aggregator pod was not found"))
