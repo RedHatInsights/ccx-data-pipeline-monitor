@@ -13,3 +13,4 @@ config_my.toml
 *.log
 *.tmp
 ccx-data-pipeline-monitor
+coverage.out
