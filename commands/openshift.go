@@ -79,6 +79,7 @@ func GetPods() {
 	}
 }
 
+// GetLogs function retrieves logs from selected pod and stores logs in file.
 func GetLogs(pod string, storeto string) {
 	stdout, stderr, err := oc.GetLogs(pod)
 	if err != nil {
