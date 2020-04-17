@@ -109,6 +109,7 @@ func GetAggregatorLogs() {
 
 }
 
+// GetPipelineLogs function retrieves logs from ccx-data-pipeline pods and stores logs in file.
 func GetPipelineLogs() {
 	if pipelinePod == "" {
 		fmt.Println(colorizer.Red("Pipeline pod was not found"))
