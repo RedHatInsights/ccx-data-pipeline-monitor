@@ -51,6 +51,7 @@ func GetPods() (string, string, error) {
 	return Command("get", "pods")
 }
 
+// GetLogs functions reads logs for selected pod
 func GetLogs(pod string) (string, string, error) {
 	return Command("logs", pod)
 }
