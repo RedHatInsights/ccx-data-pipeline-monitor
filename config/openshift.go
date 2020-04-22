@@ -20,6 +20,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// OpenShiftConfig represents all configuration options required to get access to OpenShift via oc client
 type OpenShiftConfig struct {
 	URL     string
 	Project string
