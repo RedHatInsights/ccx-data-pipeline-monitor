@@ -26,6 +26,7 @@ type ServerConfig struct {
 	UseHTTPS bool
 }
 
+// ReadServerConfig function reads configuration options for HTTP server with this service
 func ReadServerConfig() ServerConfig {
 	var cfg ServerConfig
 	sub := viper.Sub("server")
