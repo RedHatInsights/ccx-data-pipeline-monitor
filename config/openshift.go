@@ -26,6 +26,7 @@ type OpenShiftConfig struct {
 	Project string
 }
 
+// ReadOpenShiftConfig function reads configuration options required to get access to OpenShift via oc client
 func ReadOpenShiftConfig() OpenShiftConfig {
 	var cfg OpenShiftConfig
 	sub := viper.Sub("openshift")
