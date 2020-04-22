@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Server - configuration of server
+// ServerConfig data type represents configuration of server
 type ServerConfig struct {
 	Address  string
 	UseHTTPS bool
