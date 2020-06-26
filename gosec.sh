@@ -13,19 +13,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-if ! [ -x "$(command -v goconst)" ]
-then
-    echo -e "${BLUE}Installing goconst${NC}"
-    GO111MODULE=off go get github.com/jgautheron/goconst/cmd/goconst
+GO_SEC_ARGS=""
+
+VERBOSE=false
+if [[ $* == *verbose* ]]; then
+    VERBOSE=true
 fi
 
+if [[ $* != *verbose* ]]; then
+    GO_SEC_ARGS="-quiet"
+fi
 
-if [[ $(goconst -min-occurrences=3 ./... | tee /dev/tty | wc -l) -ne 0 ]]
+cd "$(dirname "$0")" || exit
+
+echo -e "${BLUE}Security issues detection${NC}"
+
+if ! [ -x "$(command -v gosec)" ]
 then
-    echo "Duplicated string(s) found"
+    echo -e "${BLUE}Installing ${NC}"
+    GO111MODULE=off go get github.com/securego/gosec/cmd/gosec 2> /dev/null
+fi
+
+if ! gosec $GO_SEC_ARGS ./...
+then
+    echo -e "${RED}[FAIL]${NC} Potential security issues detected!"
     exit 1
 else
-    echo "No duplicated strings found"
+    echo -e "${GREEN}[OK]${NC} No potential security issues has been detected"
     exit 0
 fi
