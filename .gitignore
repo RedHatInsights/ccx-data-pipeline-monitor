@@ -14,3 +14,4 @@ config_my.toml
 *.tmp
 ccx-data-pipeline-monitor
 coverage.out
+issue.py
