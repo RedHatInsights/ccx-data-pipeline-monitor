@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>monitor.go</title>
+<meta charset="utf-8"/>
+<style type="text/css">body {
+    background: rgb(225, 225, 225);
+    margin: 0px;
+    padding: 0px;
+}
+
+#docgo p {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+}
+
+#docgo div {
+    display: inline;
+}
+
+#docgo #background {
+    position: fixed;
+    top: 0; left: 525px; right: 0; bottom: 0;
+    background: rgb(47, 47, 47);
+    border-left: 1px solid #e5e5ee;
+    z-index: -1;
+}
+
+#docgo .keyword {
+    color: rgb(250, 200, 100);
+}
+
+#docgo .literal {
+    color: rgb(140, 190, 100);
+}
+
+#docgo .ident {
+    color: white;
+}
+
+#docgo .operator {
+    color: white;
+}
+
+#docgo .comment {
+}
+
+#docgo h1, h2, h3, h4, h5 {
+    text-align: left;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+}
+
+#docgo h1 {
+    margin-top: 40px;
+}
+
+#docgo .doc {
+    vertical-align: top;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+    font-size: 15px;
+    line-height: 22px;
+    color: black;
+    min-width: 450px;
+    max-width: 450px;
+    padding-top: 10px;
+    padding-right: 25px;
+    padding-bottom: 1px;
+    padding-left: 50px;
+    overflow-x: hidden;
+}
+
+#docgo .code {
+    min-width: 650px;
+    max-width: 650px;
+    padding-left: 25px;
+    padding-right: 15px;
+    border-left: 1px;
+    overflow-x: hidden;
+    vertical-align: top;
+}
+
+#docgo .code pre code  {
+    font-size: 12px;
+    line-height: 18px;
+    font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+    color: rgb(120, 120, 120);
+}
+</style>
+</head>
+<body>
+<div id="docgo">
+  <div id="background"></div>
+  <table>
+    <thead><tr><th class="doc"><h1>monitor.go</h1></th><th class="code"></th></tr></thead>
+    <tbody>
+      
+      <tr class="section">
+	<td class="doc"></td>
+	<td class="code"><pre><code><div class="comment">/*
+Copyright © 2020 Red Hat, Inc.
+
+Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/</div>
+
+<div class="keyword">package</div> <div class="ident">main</div><div class="operator"></div>
+
+<div class="keyword">import</div> <div class="operator">(</div>
+	<div class="literal">&#34;bufio&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;context&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;flag&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;fmt&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;log&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;os&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;path/filepath&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;strings&#34;</div><div class="operator"></div>
+
+	<div class="literal">&#34;github.com/c-bata/go-prompt&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;github.com/logrusorgru/aurora&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;github.com/spf13/viper&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;golang.org/x/crypto/ssh/terminal&#34;</div><div class="operator"></div>
+
+	<div class="literal">&#34;github.com/RedHatInsights/ccx-data-pipeline-monitor/commands&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;github.com/RedHatInsights/ccx-data-pipeline-monitor/config&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;github.com/RedHatInsights/ccx-data-pipeline-monitor/server&#34;</div><div class="operator"></div>
+<div class="operator">)</div><div class="operator"></div>
+
+<div class="keyword">var</div> <div class="ident">openShiftConfig</div> <div class="ident">config</div><div class="operator">.</div><div class="ident">OpenShiftConfig</div><div class="operator"></div>
+
+<div class="keyword">var</div> <div class="ident">colorizer</div> <div class="ident">aurora</div><div class="operator">.</div><div class="ident">Aurora</div><div class="operator"></div>
+<div class="keyword">var</div> <div class="ident">loggedIn</div> <div class="ident">bool</div> <div class="operator">=</div> <div class="ident">false</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>BuildVersion contains the major.minor version of the CLI client</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">var</div> <div class="ident">BuildVersion</div> <div class="ident">string</div> <div class="operator">=</div> <div class="literal">&#34;*not set*&#34;</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>BuildTime contains timestamp when the CLI client has been built</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">var</div> <div class="ident">BuildTime</div> <div class="ident">string</div> <div class="operator">=</div> <div class="literal">&#34;*not set*&#34;</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">printVersion</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Blue</div><div class="operator">(</div><div class="literal">&#34;Insights operator CLI client &#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;version&#34;</div><div class="operator">,</div> <div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Yellow</div><div class="operator">(</div><div class="ident">BuildVersion</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;compiled&#34;</div><div class="operator">,</div> <div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Yellow</div><div class="operator">(</div><div class="ident">BuildTime</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">login</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Print</div><div class="operator">(</div><div class="literal">&#34;login: &#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">p</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">terminal</div><div class="operator">.</div><div class="ident">ReadPassword</div><div class="operator">(</div><div class="literal">0</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Red</div><div class="operator">(</div><div class="literal">&#34;not set&#34;</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div> <div class="keyword">else</div> <div class="operator">{</div>
+		<div class="ident">ocLogin</div> <div class="operator">:=</div> <div class="ident">string</div><div class="operator">(</div><div class="ident">p</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">loggedIn</div> <div class="operator">=</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">TryToLogin</div><div class="operator">(</div><div class="ident">openShiftConfig</div><div class="operator">.</div><div class="ident">URL</div><div class="operator">,</div> <div class="ident">ocLogin</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">type</div> <div class="ident">simpleCommand</div> <div class="keyword">struct</div> <div class="operator">{</div>
+	<div class="ident">prefix</div>  <div class="ident">string</div><div class="operator"></div>
+	<div class="ident">handler</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">var</div> <div class="ident">simpleCommands</div> <div class="operator">=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">simpleCommand</div><div class="operator">{</div>
+	<div class="operator">{</div><div class="literal">&#34;bye&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">Quit</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;exit&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">Quit</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;quit&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">Quit</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;login&#34;</div><div class="operator">,</div> <div class="ident">login</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;?&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">PrintHelp</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;help&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">PrintHelp</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;version&#34;</div><div class="operator">,</div> <div class="ident">printVersion</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;license&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">PrintLicense</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;authors&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">PrintAuthors</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;status&#34;</div><div class="operator">,</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">DisplayStatus</div><div class="operator">(</div><div class="ident">loggedIn</div><div class="operator">)</div> <div class="operator">}</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;get pods&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">GetPods</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;get aggregator&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">GetAggregatorLogs</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;get pipeline&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">GetPipelineLogs</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;load logs&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">LoadLogs</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;aggregator logs&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">DisplayAggregatorLogs</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;aggregator statistic&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">DisplayAggregatorStatistic</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;pipeline logs&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">DisplayPipelineLogs</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">{</div><div class="literal">&#34;pipeline statistic&#34;</div><div class="operator">,</div> <div class="ident">commands</div><div class="operator">.</div><div class="ident">DisplayPipelineStatistic</div><div class="operator">}</div><div class="operator">,</div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">executeFixedCommand</div><div class="operator">(</div><div class="ident">t</div> <div class="ident">string</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>simple commands without parameters</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">for</div> <div class="ident">_</div><div class="operator">,</div> <div class="ident">command</div> <div class="operator">:=</div> <div class="keyword">range</div> <div class="ident">simpleCommands</div> <div class="operator">{</div>
+		<div class="keyword">if</div> <div class="ident">strings</div><div class="operator">.</div><div class="ident">HasPrefix</div><div class="operator">(</div><div class="ident">t</div><div class="operator">,</div> <div class="ident">command</div><div class="operator">.</div><div class="ident">prefix</div><div class="operator">)</div> <div class="operator">{</div>
+			<div class="ident">command</div><div class="operator">.</div><div class="ident">handler</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+			<div class="keyword">return</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="literal">&#34;Command not found&#34;</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">executor</div><div class="operator">(</div><div class="ident">t</div> <div class="ident">string</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">executeFixedCommand</div><div class="operator">(</div><div class="ident">t</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">completer</div><div class="operator">(</div><div class="ident">in</div> <div class="ident">prompt</div><div class="operator">.</div><div class="ident">Document</div><div class="operator">)</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">prompt</div><div class="operator">.</div><div class="ident">Suggest</div> <div class="operator">{</div>
+	<div class="ident">firstWord</div> <div class="operator">:=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">prompt</div><div class="operator">.</div><div class="ident">Suggest</div><div class="operator">{</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;exit&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;quit the application&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;quit&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;quit the application&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;bye&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;quit the application&#34;</div><div class="operator">}</div><div class="operator">,</div>
+
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;help&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;show help with all commands&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;version&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;prints the build information for CLI executable&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;copyright&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;displays copyright notice&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;license&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;displays license used by this project&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;authors&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;displays list of authors&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;status&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;displays status&#34;</div><div class="operator">}</div><div class="operator">,</div>
+
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;login&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;provide login info&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;get pods&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;get list of available pods&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;get aggregator&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;retrieve logs from aggregator pods&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;get pipeline&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;retrieve logs from ccx-data-pipeline pods&#34;</div><div class="operator">}</div><div class="operator">,</div>
+
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;load&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;load given object or objects&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;aggregator&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;aggregator-related commands&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;pipeline&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;pipeline-related commands&#34;</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="ident">secondWord</div> <div class="operator">:=</div> <div class="ident">make</div><div class="operator">(</div><div class="keyword">map</div><div class="operator">[</div><div class="ident">string</div><div class="operator">]</div><div class="operator">[</div><div class="operator">]</div><div class="ident">prompt</div><div class="operator">.</div><div class="ident">Suggest</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>oc get</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">secondWord</div><div class="operator">[</div><div class="literal">&#34;get&#34;</div><div class="operator">]</div> <div class="operator">=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">prompt</div><div class="operator">.</div><div class="ident">Suggest</div><div class="operator">{</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;pods&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;list of pods&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;aggregator&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;get aggregator logs&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;pipeline&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;get pipeline logs&#34;</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>loading objects</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">secondWord</div><div class="operator">[</div><div class="literal">&#34;load&#34;</div><div class="operator">]</div> <div class="operator">=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">prompt</div><div class="operator">.</div><div class="ident">Suggest</div><div class="operator">{</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;logs&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;load log files&#34;</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>aggregator-related operations</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">secondWord</div><div class="operator">[</div><div class="literal">&#34;aggregator&#34;</div><div class="operator">]</div> <div class="operator">=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">prompt</div><div class="operator">.</div><div class="ident">Suggest</div><div class="operator">{</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;logs&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;display aggregator logs&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;statistic&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;display aggregator statistic&#34;</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>pipeline-related operations</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">secondWord</div><div class="operator">[</div><div class="literal">&#34;pipeline&#34;</div><div class="operator">]</div> <div class="operator">=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">prompt</div><div class="operator">.</div><div class="ident">Suggest</div><div class="operator">{</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;logs&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;display pipeline logs&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="operator">{</div><div class="ident">Text</div><div class="operator">:</div> <div class="literal">&#34;statistic&#34;</div><div class="operator">,</div> <div class="ident">Description</div><div class="operator">:</div> <div class="literal">&#34;display pipeline statistic&#34;</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="ident">emptySuggest</div> <div class="operator">:=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">prompt</div><div class="operator">.</div><div class="ident">Suggest</div><div class="operator">{</div><div class="operator">}</div><div class="operator"></div>
+	<div class="ident">blocks</div> <div class="operator">:=</div> <div class="ident">strings</div><div class="operator">.</div><div class="ident">Split</div><div class="operator">(</div><div class="ident">in</div><div class="operator">.</div><div class="ident">TextBeforeCursor</div><div class="operator">(</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34; &#34;</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">if</div> <div class="ident">len</div><div class="operator">(</div><div class="ident">blocks</div><div class="operator">)</div> <div class="operator">==</div> <div class="literal">2</div> <div class="operator">{</div>
+		<div class="ident">sec</div><div class="operator">,</div> <div class="ident">ok</div> <div class="operator">:=</div> <div class="ident">secondWord</div><div class="operator">[</div><div class="ident">blocks</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div><div class="operator">]</div><div class="operator"></div>
+		<div class="keyword">if</div> <div class="ident">ok</div> <div class="operator">{</div>
+			<div class="keyword">return</div> <div class="ident">prompt</div><div class="operator">.</div><div class="ident">FilterHasPrefix</div><div class="operator">(</div><div class="ident">sec</div><div class="operator">,</div> <div class="ident">blocks</div><div class="operator">[</div><div class="literal">1</div><div class="operator">]</div><div class="operator">,</div> <div class="ident">true</div><div class="operator">)</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>second word is not known</p>
+</td>
+	<td class="code"><pre><code>		<div class="keyword">return</div> <div class="ident">emptySuggest</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>don't display compation for empty command</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">if</div> <div class="ident">in</div><div class="operator">.</div><div class="ident">GetWordBeforeCursor</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">==</div> <div class="literal">&#34;&#34;</div> <div class="operator">{</div>
+		<div class="keyword">return</div> <div class="ident">nil</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>commands consisting of just one word</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">return</div> <div class="ident">prompt</div><div class="operator">.</div><div class="ident">FilterHasPrefix</div><div class="operator">(</div><div class="ident">firstWord</div><div class="operator">,</div> <div class="ident">blocks</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div><div class="operator">,</div> <div class="ident">true</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">loadConfiguration</div><div class="operator">(</div><div class="ident">defaultConfigName</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">envVar</div> <div class="ident">string</div><div class="operator">)</div> <div class="ident">error</div> <div class="operator">{</div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="literal">&#34;Reading configuration&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">configFile</div><div class="operator">,</div> <div class="ident">specified</div> <div class="operator">:=</div> <div class="ident">os</div><div class="operator">.</div><div class="ident">LookupEnv</div><div class="operator">(</div><div class="literal">&#34;CCX_DATA_PIPELINE_MONITOR&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">specified</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>we need to separate the directory name and filename without extension</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">directory</div><div class="operator">,</div> <div class="ident">basename</div> <div class="operator">:=</div> <div class="ident">filepath</div><div class="operator">.</div><div class="ident">Split</div><div class="operator">(</div><div class="ident">configFile</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">file</div> <div class="operator">:=</div> <div class="ident">strings</div><div class="operator">.</div><div class="ident">TrimSuffix</div><div class="operator">(</div><div class="ident">basename</div><div class="operator">,</div> <div class="ident">filepath</div><div class="operator">.</div><div class="ident">Ext</div><div class="operator">(</div><div class="ident">basename</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>parse the configuration</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">viper</div><div class="operator">.</div><div class="ident">SetConfigName</div><div class="operator">(</div><div class="ident">file</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">viper</div><div class="operator">.</div><div class="ident">AddConfigPath</div><div class="operator">(</div><div class="ident">directory</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div> <div class="keyword">else</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>parse the configuration</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">viper</div><div class="operator">.</div><div class="ident">SetConfigName</div><div class="operator">(</div><div class="ident">defaultConfigName</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">viper</div><div class="operator">.</div><div class="ident">AddConfigPath</div><div class="operator">(</div><div class="literal">&#34;.&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="keyword">defer</div> <div class="ident">log</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="literal">&#34;Done&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">viper</div><div class="operator">.</div><div class="ident">ReadInConfig</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">startCLI</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>parse command line arguments and flags</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">var</div> <div class="ident">colors</div> <div class="operator">=</div> <div class="ident">flag</div><div class="operator">.</div><div class="ident">Bool</div><div class="operator">(</div><div class="literal">&#34;colors&#34;</div><div class="operator">,</div> <div class="ident">true</div><div class="operator">,</div> <div class="literal">&#34;enable or disable colors&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">var</div> <div class="ident">useCompleter</div> <div class="operator">=</div> <div class="ident">flag</div><div class="operator">.</div><div class="ident">Bool</div><div class="operator">(</div><div class="literal">&#34;completer&#34;</div><div class="operator">,</div> <div class="ident">true</div><div class="operator">,</div> <div class="literal">&#34;enable or disable command line completer&#34;</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>var askForConfirmation = flag.Bool(&quot;confirmation&quot;, true, &quot;enable or disable asking for confirmation for selected actions (like delete)&quot;)</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">flag</div><div class="operator">.</div><div class="ident">Parse</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="ident">colorizer</div> <div class="operator">=</div> <div class="ident">aurora</div><div class="operator">.</div><div class="ident">NewAurora</div><div class="operator">(</div><div class="operator">*</div><div class="ident">colors</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">commands</div><div class="operator">.</div><div class="ident">SetColorizer</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">if</div> <div class="operator">*</div><div class="ident">useCompleter</div> <div class="operator">{</div>
+		<div class="ident">p</div> <div class="operator">:=</div> <div class="ident">prompt</div><div class="operator">.</div><div class="ident">New</div><div class="operator">(</div><div class="ident">executor</div><div class="operator">,</div> <div class="ident">completer</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">p</div><div class="operator">.</div><div class="ident">Run</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div> <div class="keyword">else</div> <div class="operator">{</div>
+		<div class="ident">scanner</div> <div class="operator">:=</div> <div class="ident">bufio</div><div class="operator">.</div><div class="ident">NewScanner</div><div class="operator">(</div><div class="ident">os</div><div class="operator">.</div><div class="ident">Stdin</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Print</div><div class="operator">(</div><div class="literal">&#34;&gt; &#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">for</div> <div class="ident">scanner</div><div class="operator">.</div><div class="ident">Scan</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+			<div class="ident">line</div> <div class="operator">:=</div> <div class="ident">scanner</div><div class="operator">.</div><div class="ident">Text</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+			<div class="ident">executor</div><div class="operator">(</div><div class="ident">line</div><div class="operator">)</div><div class="operator"></div>
+			<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Print</div><div class="operator">(</div><div class="literal">&#34;&gt; &#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">startWebUI</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">serverConfig</div> <div class="operator">:=</div> <div class="ident">config</div><div class="operator">.</div><div class="ident">ReadServerConfig</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">server</div> <div class="operator">:=</div> <div class="ident">server</div><div class="operator">.</div><div class="ident">New</div><div class="operator">(</div><div class="ident">serverConfig</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">server</div><div class="operator">.</div><div class="ident">Start</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">defer</div> <div class="ident">server</div><div class="operator">.</div><div class="ident">Stop</div><div class="operator">(</div><div class="ident">context</div><div class="operator">.</div><div class="ident">TODO</div><div class="operator">(</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">main</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>read configuration first</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">loadConfiguration</div><div class="operator">(</div><div class="literal">&#34;config&#34;</div><div class="operator">,</div> <div class="literal">&#34;CCX_DATA_PIPELINE_MONITOR&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">panic</div><div class="operator">(</div><div class="ident">fmt</div><div class="operator">.</div><div class="ident">Errorf</div><div class="operator">(</div><div class="literal">&#34;Fatal error config file: %s&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="ident">uiType</div> <div class="operator">:=</div> <div class="ident">viper</div><div class="operator">.</div><div class="ident">Sub</div><div class="operator">(</div><div class="literal">&#34;ui&#34;</div><div class="operator">)</div><div class="operator">.</div><div class="ident">GetString</div><div class="operator">(</div><div class="literal">&#34;type&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">openShiftConfig</div> <div class="operator">=</div> <div class="ident">config</div><div class="operator">.</div><div class="ident">ReadOpenShiftConfig</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">switch</div> <div class="ident">uiType</div> <div class="operator">{</div>
+	<div class="keyword">case</div> <div class="literal">&#34;cli&#34;</div><div class="operator">:</div>
+		<div class="ident">startCLI</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">&#34;web&#34;</div><div class="operator">:</div>
+		<div class="ident">startWebUI</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">default</div><div class="operator">:</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Fatal</div><div class="operator">(</div><div class="literal">&#34;Unknown UI type&#34;</div><div class="operator">,</div> <div class="ident">uiType</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
