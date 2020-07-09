@@ -1,0 +1,87 @@
+@startuml
+namespace analyser {
+    class AggregatorLogEntry << (S,Aquamarine) >> {
+        + Level string
+        + Time string
+        + Message string
+        + Type string
+        + Error string
+        + Topic string
+        + Offset int
+        + Group string
+        + Organization int
+        + Cluster string
+
+    }
+    class PipelineLogEntry << (S,Aquamarine) >> {
+        + Level string
+        + Time string
+        + Name string
+        + Filename string
+        + Message string
+
+    }
+}
+
+
+namespace config {
+    class OpenShiftConfig << (S,Aquamarine) >> {
+        + URL string
+        + Project string
+
+    }
+    class ServerConfig << (S,Aquamarine) >> {
+        + Address string
+        + UseHTTPS bool
+
+    }
+}
+
+
+namespace main {
+    class AggregatorLogEntry << (S,Aquamarine) >> {
+        + Level string
+        + Time string
+        + Message string
+        + Type string
+        + Error string
+        + Topic string
+        + Offset int
+        + Group string
+        + Organization int
+        + Cluster string
+
+    }
+    class PipelineLogEntry << (S,Aquamarine) >> {
+        + Level string
+        + Time string
+        + Name string
+        + Filename string
+        + Message string
+
+    }
+    class simpleCommand << (S,Aquamarine) >> {
+        - prefix string
+        - handler <font color=blue>func</font>() 
+
+    }
+}
+
+
+namespace server {
+    class HTTPServer << (S,Aquamarine) >> {
+        + Config config.ServerConfig
+        + Serv *http.Server
+
+        - mainEndpoint(writer http.ResponseWriter, _ *http.Request) 
+
+        + LogRequest(nextHandler http.Handler) http.Handler
+        + Initialize(address string) http.Handler
+        + Start() error
+        + Stop(ctx context.Context) error
+
+    }
+}
+
+
+@enduml
