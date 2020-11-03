@@ -149,7 +149,13 @@ limitations under the License.
 	<div class="keyword">return</div> <div class="ident">true</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
-<div class="keyword">func</div> <div class="ident">GetPods</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>GetPods function retrieves list of pods available for given user</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">GetPods</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
 	<div class="ident">stdout</div><div class="operator">,</div> <div class="ident">stderr</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">oc</div><div class="operator">.</div><div class="ident">GetPods</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Red</div><div class="operator">(</div><div class="literal">&#34;\nUnable to get pods&#34;</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>

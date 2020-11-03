@@ -41,6 +41,7 @@ func TryToLogin(url string, ocLogin string) bool {
 	return true
 }
 
+// GetPods function retrieves list of pods available for given user
 func GetPods() {
 	stdout, stderr, err := oc.GetPods()
 	if err != nil {
