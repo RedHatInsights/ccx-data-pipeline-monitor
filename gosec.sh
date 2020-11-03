@@ -20,12 +20,7 @@ NC='\033[0m' # No Color
 
 GO_SEC_ARGS=""
 
-VERBOSE=false
-if [[ $* == *verbose* ]]; then
-    VERBOSE=true
-fi
-
-if [[ $* != *verbose* ]]; then
+if [[ $* != *verbose* ]] && [[ -z "${VERBOSE}" ]]; then
     GO_SEC_ARGS="-quiet"
 fi
 
