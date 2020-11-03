@@ -17,6 +17,7 @@ type PipelineLogEntry struct {
 	Message  string `json:"message"`
 }
 
+// AggregatorLogEntry represents one log entry (record) read from log file.
 type AggregatorLogEntry struct {
 	Level        string `json:"level"`
 	Time         string `json:"time"`
