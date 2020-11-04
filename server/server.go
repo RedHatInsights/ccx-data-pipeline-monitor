@@ -1,5 +1,5 @@
 /*
-Copyright ÄÂĂÂÄÂĂÂÄÂÄšÄÄÂĂÂ  2020 Red Hat, Inc.
+Copyright © 2020 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -109,7 +109,10 @@ func (server *HTTPServer) LogRequest(nextHandler http.Handler) http.Handler {
 }
 
 func (server *HTTPServer) mainEndpoint(writer http.ResponseWriter, _ *http.Request) {
-	responses.SendResponse(writer, responses.BuildOkResponse())
+	err := responses.SendResponse(writer, responses.BuildOkResponse())
+	if err != nil {
+		log.Println("Error sending response in main endpoint", err)
+	}
 }
 
 // Initialize perform the server initialization
