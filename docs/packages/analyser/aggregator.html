@@ -158,7 +158,31 @@ limitations under the License.</p>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="keyword">return</div> <div class="ident">nil</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
-	<div class="keyword">defer</div> <div class="ident">file</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>log file needs to be closed properly</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">defer</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>try to close the file</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">file</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>in case of error all we can do is to just log the error</p>
+</td>
+	<td class="code"><pre><code>		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+			<div class="ident">log</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 
 	<div class="ident">scanner</div> <div class="operator">:=</div> <div class="ident">bufio</div><div class="operator">.</div><div class="ident">NewScanner</div><div class="operator">(</div><div class="ident">file</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">for</div> <div class="ident">scanner</div><div class="operator">.</div><div class="ident">Scan</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
