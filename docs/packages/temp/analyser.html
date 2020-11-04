@@ -111,7 +111,13 @@
 	<div class="literal">&#34;os&#34;</div><div class="operator"></div>
 <div class="operator">)</div><div class="operator"></div>
 
-<div class="keyword">type</div> <div class="ident">PipelineLogEntry</div> <div class="keyword">struct</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>PipelineLogEntry represents one log entry (record) read from log file.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">PipelineLogEntry</div> <div class="keyword">struct</div> <div class="operator">{</div>
 	<div class="ident">Level</div>    <div class="ident">string</div> <div class="literal">`json:&#34;levelname&#34;`</div><div class="operator"></div>
 	<div class="ident">Time</div>     <div class="ident">string</div> <div class="literal">`json:&#34;asctime&#34;`</div><div class="operator"></div>
 	<div class="ident">Name</div>     <div class="ident">string</div> <div class="literal">`json:&#34;name&#34;`</div><div class="operator"></div>
@@ -119,7 +125,13 @@
 	<div class="ident">Message</div>  <div class="ident">string</div> <div class="literal">`json:&#34;message&#34;`</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
-<div class="keyword">type</div> <div class="ident">AggregatorLogEntry</div> <div class="keyword">struct</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>AggregatorLogEntry represents one log entry (record) read from log file.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">AggregatorLogEntry</div> <div class="keyword">struct</div> <div class="operator">{</div>
 	<div class="ident">Level</div>        <div class="ident">string</div> <div class="literal">`json:&#34;level&#34;`</div><div class="operator"></div>
 	<div class="ident">Time</div>         <div class="ident">string</div> <div class="literal">`json:&#34;time&#34;`</div><div class="operator"></div>
 	<div class="ident">Message</div>      <div class="ident">string</div> <div class="literal">`json:&#34;message&#34;`</div><div class="operator"></div>
@@ -139,7 +151,31 @@
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="keyword">return</div> <div class="ident">entries</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
-	<div class="keyword">defer</div> <div class="ident">file</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>log file needs to be closed properly</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">defer</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>try to close the file</p>
+</td>
+	<td class="code"><pre><code>		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">file</div><div class="operator">.</div><div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>in case of error all we can do is to just log the error</p>
+</td>
+	<td class="code"><pre><code>		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+			<div class="ident">log</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 
 	<div class="ident">scanner</div> <div class="operator">:=</div> <div class="ident">bufio</div><div class="operator">.</div><div class="ident">NewScanner</div><div class="operator">(</div><div class="ident">file</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">for</div> <div class="ident">scanner</div><div class="operator">.</div><div class="ident">Scan</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
