@@ -225,7 +225,12 @@ func startWebUI() {
 	}
 
 	// server has to be stopped properly
-	defer server.Stop(context.TODO())
+	defer func() {
+		err := server.Stop(context.TODO())
+		if err != nil {
+			panic(fmt.Errorf("Stopping server: %s", err))
+		}
+	}()
 }
 
 func main() {
