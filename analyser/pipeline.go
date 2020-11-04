@@ -46,7 +46,16 @@ func readPipelineLogFile(filename string) ([]PipelineLogEntry, error) {
 	if err != nil {
 		return entries, err
 	}
-	defer file.Close()
+	// log file needs to be closed properly
+	defer func() {
+		// try to close the file
+		err := file.Close()
+
+		// in case of error all we can do is to just log the error
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
