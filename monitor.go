@@ -219,7 +219,12 @@ func startCLI() {
 func startWebUI() {
 	serverConfig := config.ReadServerConfig()
 	server := server.New(serverConfig)
-	server.Start()
+	err := server.Start()
+	if err != nil {
+		panic(fmt.Errorf("Starting server: %s", err))
+	}
+
+	// server has to be stopped properly
 	defer server.Stop(context.TODO())
 }
 
