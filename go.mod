@@ -1,6 +1,6 @@
 module github.com/RedHatInsights/ccx-data-pipeline-monitor
 
-go 1.13
+go 1.14
 
 require (
 	github.com/RedHatInsights/insights-operator-utils v0.0.0-20200310084550-28e10aeb05ce
