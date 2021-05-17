@@ -142,7 +142,7 @@ func printAggregatorStatistic(entries []AggregatorLogEntry) {
 	printStatisticLine("Consumed", consumed)
 	printStatisticLine("Read", read)
 	printStatisticLine("Whitelisted", whitelisted)
-	printStatisticLine("Marshalled", marshalled)
+	printStatisticLine("Marshalled messages", marshalled)
 	printStatisticLine("Checked", checked)
 	printStatisticLine("Stored", stored)
 }
