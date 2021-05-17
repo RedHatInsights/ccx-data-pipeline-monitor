@@ -116,14 +116,14 @@ func printStatisticLine(colorizer aurora.Aurora, what string, entries []Aggregat
 
 func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	consumed := filterConsumedMessages(entries)
-	read := filterByMessage(entries, "Read")
+	read := filterByMessage(entries, readFilter)
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
 	marshalled := filterByMessage(entries, "Marshalled")
 	checked := filterByMessage(entries, "Time ok")
 	stored := filterByMessage(entries, "Stored")
 
 	printStatisticLine(colorizer, "Consumed", consumed, consumed)
-	printStatisticLine(colorizer, "Read", read, consumed)
+	printStatisticLine(colorizer, readFilter, read, consumed)
 	printStatisticLine(colorizer, "Whitelisted", whitelisted, read)
 	printStatisticLine(colorizer, "Marshalled", marshalled, whitelisted)
 	printStatisticLine(colorizer, "Checked", checked, marshalled)
