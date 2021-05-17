@@ -27,6 +27,11 @@ import (
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 )
 
+// Filters
+const (
+	readFilter = "Read"
+)
+
 // AggregatorLogEntry represents one log entry (record) read from log file.
 type AggregatorLogEntry struct {
 	Level        string `json:"level"`
@@ -196,12 +201,12 @@ func diffEntryListsByOffset(list1 []AggregatorLogEntry, list2 []AggregatorLogEnt
 
 func getConsumedNotReadMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	consumed := filterConsumedMessages(entries)
-	read := filterByMessage(entries, "Read")
+	read := filterByMessage(entries, readFilter)
 	return diffEntryListsByOffset(consumed, read)
 }
 
 func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
-	read := filterByMessage(entries, "Read")
+	read := filterByMessage(entries, readFilter)
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
 	return diffEntryListsByOffset(read, whitelisted)
 }
