@@ -204,12 +204,12 @@ func diffEntryListsByOffset(list1 []AggregatorLogEntry, list2 []AggregatorLogEnt
 
 func getConsumedNotReadMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	consumed := filterConsumedMessages(entries)
-	read := filterByMessage(entries, "Read")
+	read := filterByMessage(entries, readFilter)
 	return diffEntryListsByOffset(consumed, read)
 }
 
 func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
-	read := filterByMessage(entries, "Read")
+	read := filterByMessage(entries, readFilter)
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
 	return diffEntryListsByOffset(read, whitelisted)
 }
@@ -236,7 +236,7 @@ func analyse() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Read", len(entries2), "entries")
+	fmt.Println("Read:", len(entries2), "entries")
 	printAggregatorStatistic(entries2)
 	//printConsumedNotRead(entries2)
 	printAggregatorNotWhitelisted(entries2)
