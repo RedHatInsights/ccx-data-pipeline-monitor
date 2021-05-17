@@ -8,6 +8,11 @@ import (
 	"os"
 )
 
+// Filters
+const (
+	readFilter = "Read"
+)
+
 // PipelineLogEntry represents one log entry (record) read from log file.
 type PipelineLogEntry struct {
 	Level    string `json:"levelname"`
@@ -133,14 +138,14 @@ func printStatisticLine(what string, entries []AggregatorLogEntry) {
 
 func printAggregatorStatistic(entries []AggregatorLogEntry) {
 	consumed := filterConsumedMessages(entries)
-	read := filterByMessage(entries, "Read")
+	read := filterByMessage(entries, readFilter)
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
 	marshalled := filterByMessage(entries, "Marshalled")
 	checked := filterByMessage(entries, "Time ok")
 	stored := filterByMessage(entries, "Stored")
 
 	printStatisticLine("Consumed", consumed)
-	printStatisticLine("Read", read)
+	printStatisticLine(readFilter, read)
 	printStatisticLine("Whitelisted", whitelisted)
 	printStatisticLine("Marshalled messages", marshalled)
 	printStatisticLine("Checked", checked)
