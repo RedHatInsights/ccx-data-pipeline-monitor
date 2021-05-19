@@ -33,6 +33,11 @@ const (
 	storedFilter = "Stored"
 )
 
+// Messages
+const (
+	emptyLog = "Empty log"
+)
+
 // AggregatorLogEntry represents one log entry (record) read from log file.
 type AggregatorLogEntry struct {
 	Level        string `json:"level"`
@@ -272,7 +277,7 @@ func PrintAggregatorStatistic(colorizer aurora.Aurora) {
 		return
 	}
 	if len(aggregatorEntries) == 0 {
-		fmt.Println(colorizer.Red("empty log"))
+		fmt.Println(colorizer.Red(emptyLog))
 		return
 	}
 	printAggregatorStatistic(colorizer, aggregatorEntries)
@@ -285,7 +290,7 @@ func PrintAggregatorConsumedNotReadMessages(colorizer aurora.Aurora) {
 		return
 	}
 	if len(aggregatorEntries) == 0 {
-		fmt.Println(colorizer.Red("empty log"))
+		fmt.Println(colorizer.Red(emptyLog))
 		return
 	}
 	printConsumedNotRead(colorizer, aggregatorEntries)
@@ -298,7 +303,7 @@ func PrintAggregatorConsumedNotWhitelisted(colorizer aurora.Aurora) {
 		return
 	}
 	if len(aggregatorEntries) == 0 {
-		fmt.Println(colorizer.Red("empty log"))
+		fmt.Println(colorizer.Red(emptyLog))
 		return
 	}
 	printNotWhitelisted(colorizer, aggregatorEntries)
@@ -311,7 +316,7 @@ func PrintAggregatorWhitelistedNotMarshalled(colorizer aurora.Aurora) {
 		return
 	}
 	if len(aggregatorEntries) == 0 {
-		fmt.Println(colorizer.Red("empty log"))
+		fmt.Println(colorizer.Red(emptyLog))
 		return
 	}
 	printWhitelistedNotMarshalled(colorizer, aggregatorEntries)
@@ -324,7 +329,7 @@ func PrintAggregatorMarshalledNotChecked(colorizer aurora.Aurora) {
 		return
 	}
 	if len(aggregatorEntries) == 0 {
-		fmt.Println(colorizer.Red("empty log"))
+		fmt.Println(colorizer.Red(emptyLog))
 		return
 	}
 	printMarshalledNotChecked(colorizer, aggregatorEntries)
@@ -337,7 +342,7 @@ func PrintAggregatorCheckedNotStored(colorizer aurora.Aurora) {
 		return
 	}
 	if len(aggregatorEntries) == 0 {
-		fmt.Println(colorizer.Red("empty log"))
+		fmt.Println(colorizer.Red(emptyLog))
 		return
 	}
 	printCheckedNotStored(colorizer, aggregatorEntries)
