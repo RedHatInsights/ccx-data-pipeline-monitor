@@ -29,7 +29,8 @@ import (
 
 // Filters
 const (
-	readFilter = "Read"
+	readFilter   = "Read"
+	storedFilter = "Stored"
 )
 
 // AggregatorLogEntry represents one log entry (record) read from log file.
@@ -120,14 +121,14 @@ func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEn
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
 	marshalled := filterByMessage(entries, "Marshalled")
 	checked := filterByMessage(entries, "Time ok")
-	stored := filterByMessage(entries, "Stored")
+	stored := filterByMessage(entries, storedFilter)
 
 	printStatisticLine(colorizer, "Consumed", consumed, consumed)
 	printStatisticLine(colorizer, readFilter, read, consumed)
 	printStatisticLine(colorizer, "Whitelisted", whitelisted, read)
 	printStatisticLine(colorizer, "Marshalled", marshalled, whitelisted)
 	printStatisticLine(colorizer, "Checked", checked, marshalled)
-	printStatisticLine(colorizer, "Stored", stored, checked)
+	printStatisticLine(colorizer, storedFilter, stored, checked)
 }
 
 func printConsumedEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
@@ -225,7 +226,7 @@ func getNotCheckedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 
 func getNotStoredMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	checked := filterByMessage(entries, "Time ok")
-	stored := filterByMessage(entries, "Stored")
+	stored := filterByMessage(entries, storedFilter)
 	return diffEntryListsByOffset(checked, stored)
 }
 
