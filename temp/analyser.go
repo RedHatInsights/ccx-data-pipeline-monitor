@@ -10,7 +10,8 @@ import (
 
 // Filters
 const (
-	readFilter = "Read"
+	readFilter   = "Read"
+	storedFilter = "Stored"
 )
 
 // PipelineLogEntry represents one log entry (record) read from log file.
@@ -142,14 +143,14 @@ func printAggregatorStatistic(entries []AggregatorLogEntry) {
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
 	marshalled := filterByMessage(entries, "Marshalled")
 	checked := filterByMessage(entries, "Time ok")
-	stored := filterByMessage(entries, "Stored")
+	stored := filterByMessage(entries, storedFilter)
 
 	printStatisticLine("Consumed", consumed)
 	printStatisticLine(readFilter, read)
 	printStatisticLine("Whitelisted", whitelisted)
 	printStatisticLine("Marshalled messages", marshalled)
 	printStatisticLine("Checked", checked)
-	printStatisticLine("Stored", stored)
+	printStatisticLine(storedFilter, stored)
 }
 
 func printConsumedEntry(entry AggregatorLogEntry) {
