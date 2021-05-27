@@ -91,7 +91,7 @@ func GetLogs(pod string, storeto string) {
 	fmt.Println(colorizer.Green("Logs have been read"))
 	fmt.Printf("Log file size: %d bytes\n", len(stdout))
 
-	err = ioutil.WriteFile(storeto, []byte(stdout), 0644)
+	err = ioutil.WriteFile(storeto, []byte(stdout), 0600)
 	if err != nil {
 		fmt.Println(colorizer.Red("\nUnable to write logs"))
 		fmt.Println(err)
