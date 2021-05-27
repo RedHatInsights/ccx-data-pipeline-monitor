@@ -40,6 +40,8 @@ type AggregatorLogEntry struct {
 func readPipelineLogFile(filename string) ([]PipelineLogEntry, error) {
 	entries := []PipelineLogEntry{}
 
+	// disable "G304 (CWE-22): Potential file inclusion via variable"
+	// #nosec G304
 	file, err := os.Open(filename)
 	if err != nil {
 		return entries, err
