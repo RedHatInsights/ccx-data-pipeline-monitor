@@ -29,8 +29,9 @@ import (
 
 // Filters
 const (
-	readFilter   = "Read"
-	storedFilter = "Stored"
+	readFilter       = "Read"
+	marshalledFilter = "Marshalled"
+	storedFilter     = "Stored"
 )
 
 // Messages
@@ -226,7 +227,7 @@ func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntr
 
 func getNotMarshalledMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
-	marshalled := filterByMessage(entries, "Marshalled")
+	marshalled := filterByMessage(entries, marshalledFilter)
 	return diffEntryListsByOffset(whitelisted, marshalled)
 }
 
