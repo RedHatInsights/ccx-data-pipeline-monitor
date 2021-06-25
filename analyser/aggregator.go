@@ -139,7 +139,7 @@ func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEn
 	printStatisticLine(colorizer, "Consumed", consumed, consumed)
 	printStatisticLine(colorizer, readFilter, read, consumed)
 	printStatisticLine(colorizer, "Whitelisted", whitelisted, read)
-	printStatisticLine(colorizer, "Marshalled", marshalled, whitelisted)
+	printStatisticLine(colorizer, marshalledFilter, marshalled, whitelisted)
 	printStatisticLine(colorizer, "Checked", checked, marshalled)
 	printStatisticLine(colorizer, storedFilter, stored, checked)
 }
