@@ -242,7 +242,7 @@ func analyse() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Read:", len(entries2), "entries")
+	fmt.Println("Read:", len(entries2), "log entries read")
 	printAggregatorStatistic(entries2)
 	//printConsumedNotRead(entries2)
 	printAggregatorNotWhitelisted(entries2)
