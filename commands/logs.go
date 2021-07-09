@@ -22,13 +22,18 @@ import (
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/analyser"
 )
 
+// Messages
+const (
+	numberOfLogEntries = "entries"
+)
+
 func loadAggregatorLogs() {
 	fmt.Println(colorizer.Blue("Aggregator logs"))
 	entries, err := analyser.ReadAggregatorLogFiles()
 	if err != nil {
 		fmt.Println(colorizer.Red(err))
 	}
-	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), "entries")
+	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), numberOfLogEntries)
 	fmt.Println()
 }
 
