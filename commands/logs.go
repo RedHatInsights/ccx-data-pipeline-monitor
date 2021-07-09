@@ -43,7 +43,7 @@ func loadPipelineLogs() {
 	if err != nil {
 		fmt.Println(colorizer.Red(err))
 	}
-	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), "entries")
+	fmt.Println(colorizer.Green("Success:"), "read", colorizer.Blue(entries), numberOfLogEntries)
 	fmt.Println()
 }
 
