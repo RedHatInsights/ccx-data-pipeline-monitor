@@ -31,6 +31,7 @@ import (
 const (
 	readFilter       = "Read"
 	marshalledFilter = "Marshalled"
+	timeOkFilter     = "Time ok"
 	storedFilter     = "Stored"
 )
 
@@ -133,7 +134,7 @@ func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEn
 	read := filterByMessage(entries, readFilter)
 	whitelisted := filterByMessage(entries, "Organization whitelisted")
 	marshalled := filterByMessage(entries, marshalledFilter)
-	checked := filterByMessage(entries, "Time ok")
+	checked := filterByMessage(entries, timeOkFilter)
 	stored := filterByMessage(entries, storedFilter)
 
 	printStatisticLine(colorizer, "Consumed", consumed, consumed)
