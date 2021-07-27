@@ -234,7 +234,7 @@ func getNotMarshalledMessages(entries []AggregatorLogEntry) []AggregatorLogEntry
 
 func getNotCheckedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	marshalled := filterByMessage(entries, marshalledFilter)
-	checked := filterByMessage(entries, "Time ok")
+	checked := filterByMessage(entries, timeOkFilter)
 	return diffEntryListsByOffset(marshalled, checked)
 }
 
