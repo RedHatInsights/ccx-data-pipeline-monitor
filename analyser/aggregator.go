@@ -239,7 +239,7 @@ func getNotCheckedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 }
 
 func getNotStoredMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
-	checked := filterByMessage(entries, "Time ok")
+	checked := filterByMessage(entries, timeOkFilter)
 	stored := filterByMessage(entries, storedFilter)
 	return diffEntryListsByOffset(checked, stored)
 }
