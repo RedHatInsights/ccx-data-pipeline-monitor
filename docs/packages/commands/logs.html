@@ -125,13 +125,23 @@ limitations under the License.
 	<div class="literal">&#34;github.com/RedHatInsights/ccx-data-pipeline-monitor/analyser&#34;</div><div class="operator"></div>
 <div class="operator">)</div><div class="operator"></div>
 
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Messages</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">const</div> <div class="operator">(</div>
+	<div class="ident">numberOfLogEntries</div> <div class="operator">=</div> <div class="literal">&#34;entries&#34;</div><div class="operator"></div>
+<div class="operator">)</div><div class="operator"></div>
+
 <div class="keyword">func</div> <div class="ident">loadAggregatorLogs</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
 	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Blue</div><div class="operator">(</div><div class="literal">&#34;Aggregator logs&#34;</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
 	<div class="ident">entries</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">analyser</div><div class="operator">.</div><div class="ident">ReadAggregatorLogFiles</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Red</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
-	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Green</div><div class="operator">(</div><div class="literal">&#34;Success:&#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;read&#34;</div><div class="operator">,</div> <div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Blue</div><div class="operator">(</div><div class="ident">entries</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;entries&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Green</div><div class="operator">(</div><div class="literal">&#34;Success:&#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;read&#34;</div><div class="operator">,</div> <div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Blue</div><div class="operator">(</div><div class="ident">entries</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">numberOfLogEntries</div><div class="operator">)</div><div class="operator"></div>
 	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
@@ -141,7 +151,7 @@ limitations under the License.
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Red</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
-	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Green</div><div class="operator">(</div><div class="literal">&#34;Success:&#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;read&#34;</div><div class="operator">,</div> <div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Blue</div><div class="operator">(</div><div class="ident">entries</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;entries&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Green</div><div class="operator">(</div><div class="literal">&#34;Success:&#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;read&#34;</div><div class="operator">,</div> <div class="ident">colorizer</div><div class="operator">.</div><div class="ident">Blue</div><div class="operator">(</div><div class="ident">entries</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">numberOfLogEntries</div><div class="operator">)</div><div class="operator"></div>
 	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
