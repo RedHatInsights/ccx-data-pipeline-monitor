@@ -132,7 +132,15 @@ limitations under the License.
 	<td class="doc"><p>Command run any oc command and return its standard and error outputs</p>
 </td>
 	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">Command</div><div class="operator">(</div><div class="ident">args</div> <div class="operator">...</div><div class="ident">string</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">string</div><div class="operator">,</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
-	<div class="ident">cmd</div> <div class="operator">:=</div> <div class="ident">exec</div><div class="operator">.</div><div class="ident">Command</div><div class="operator">(</div><div class="literal">&#34;oc&#34;</div><div class="operator">,</div> <div class="ident">args</div><div class="operator">...</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>disable &quot;G204 (CWE-78): Subprocess launched with variable</p>
+
+<h1>nosec G204</h1>
+</td>
+	<td class="code"><pre><code>	<div class="ident">cmd</div> <div class="operator">:=</div> <div class="ident">exec</div><div class="operator">.</div><div class="ident">Command</div><div class="operator">(</div><div class="literal">&#34;oc&#34;</div><div class="operator">,</div> <div class="ident">args</div><div class="operator">...</div><div class="operator">)</div><div class="operator"></div>
 
 	<div class="keyword">var</div> <div class="ident">stdout</div><div class="operator">,</div> <div class="ident">stderr</div> <div class="ident">bytes</div><div class="operator">.</div><div class="ident">Buffer</div><div class="operator"></div>
 	<div class="ident">cmd</div><div class="operator">.</div><div class="ident">Stdout</div> <div class="operator">=</div> <div class="operator">&amp;</div><div class="ident">stdout</div><div class="operator"></div>
