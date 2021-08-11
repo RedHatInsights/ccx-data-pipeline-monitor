@@ -14,6 +14,9 @@
 
 package analyser
 
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/analyser/aggregator.html
+
 import (
 	"bufio"
 	"encoding/json"

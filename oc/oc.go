@@ -16,6 +16,9 @@ limitations under the License.
 
 package oc
 
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/oc/oc.html
+
 import (
 	"bytes"
 	"os/exec"

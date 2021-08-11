@@ -16,6 +16,9 @@ limitations under the License.
 
 package server
 
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/server/server.html
+
 import (
 	"context"
 	"fmt"

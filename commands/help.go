@@ -16,6 +16,9 @@ limitations under the License.
 
 package commands
 
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/commands/help.html
+
 import (
 	"fmt"
 )

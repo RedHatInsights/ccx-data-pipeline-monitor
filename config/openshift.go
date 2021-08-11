@@ -16,6 +16,9 @@ limitations under the License.
 
 package config
 
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/config/openshift.html
+
 import (
 	"github.com/spf13/viper"
 )
