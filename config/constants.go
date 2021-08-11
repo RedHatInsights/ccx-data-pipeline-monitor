@@ -16,6 +16,9 @@ limitations under the License.
 
 package config
 
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/config/constants.html
+
 const (
 	// AggregatorLogFileName is name of file used to store logs gathered from aggregator pods
 	AggregatorLogFileName = "aggregator.log"
