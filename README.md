@@ -8,3 +8,7 @@
 [![License](https://img.shields.io/badge/license-Apache-blue)](https://github.com/RedHatInsights/ccx-data-pipeline-monitor/blob/master/LICENSE)
 
 Monitor for CCX data pipeline
+
+## Package manifest
+
+Package manifest is available at [docs/manifest.txt](docs/manifest.txt).
