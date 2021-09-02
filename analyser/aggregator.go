@@ -40,7 +40,8 @@ const (
 
 // Messages
 const (
-	emptyLog = "Empty log"
+	emptyLog         = "Empty log"
+	logsAreNotLoaded = "Logs are not loaded"
 )
 
 // Log leves for analyzed files
@@ -285,7 +286,7 @@ func ReadAggregatorLogFiles() (int, error) {
 // PrintAggregatorStatistic prints statistic gathered from aggregator logs.
 func PrintAggregatorStatistic(colorizer aurora.Aurora) {
 	if aggregatorEntries == nil {
-		fmt.Println(colorizer.Red("logs are not loaded"))
+		fmt.Println(colorizer.Red(logsAreNotLoaded))
 		return
 	}
 	if len(aggregatorEntries) == 0 {
