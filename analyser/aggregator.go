@@ -36,6 +36,7 @@ const (
 	marshalledFilter = "Marshalled"
 	timeOkFilter     = "Time ok"
 	storedFilter     = "Stored"
+	consumedFilter   = "Consumed"
 )
 
 // Messages
@@ -109,7 +110,7 @@ func filterConsumedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	consumed := []AggregatorLogEntry{}
 
 	for _, entry := range entries {
-		if entry.Message == "Consumed" && entry.Group != "" {
+		if entry.Message == consumedFilter && entry.Group != "" {
 			consumed = append(consumed, entry)
 		}
 	}
