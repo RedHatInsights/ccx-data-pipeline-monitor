@@ -1,4 +1,4 @@
-# Copyright 2020 Red Hat, Inc
+# Copyright 2020, 2021 Red Hat, Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ go:
 
 jobs:
   include:
+    - stage: build
+      script:
+        - go build
     - stage: style
       script:
         - make style
@@ -31,5 +34,6 @@ jobs:
         - bash <(curl -s https://codecov.io/bash)
 
 stages:
+  - build
   - style
   - unit tests
