@@ -351,7 +351,7 @@ func PrintAggregatorMarshalledNotChecked(colorizer aurora.Aurora) {
 // PrintAggregatorCheckedNotStored function prints all messages that have been checked but not stored into database for whatever reason
 func PrintAggregatorCheckedNotStored(colorizer aurora.Aurora) {
 	if aggregatorEntries == nil {
-		fmt.Println(colorizer.Red("logs are not loaded"))
+		fmt.Println(colorizer.Red(logsAreNotLoaded))
 		return
 	}
 	if len(aggregatorEntries) == 0 {
