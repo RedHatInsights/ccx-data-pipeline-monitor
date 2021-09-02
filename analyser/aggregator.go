@@ -312,7 +312,7 @@ func PrintAggregatorConsumedNotReadMessages(colorizer aurora.Aurora) {
 // PrintAggregatorConsumedNotWhitelisted function prints all consumed, but not whitelisted messages, ie. messages that have been filtered
 func PrintAggregatorConsumedNotWhitelisted(colorizer aurora.Aurora) {
 	if aggregatorEntries == nil {
-		fmt.Println(colorizer.Red("logs are not loaded"))
+		fmt.Println(colorizer.Red(logsAreNotLoaded))
 		return
 	}
 	if len(aggregatorEntries) == 0 {
