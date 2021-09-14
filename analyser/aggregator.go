@@ -75,17 +75,6 @@ func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 	if err != nil {
 		return nil, err
 	}
-	// log file needs to be closed properly
-	defer func() {
-		// try to close the file
-		err := file.Close()
-
-		// in case of error all we can do is to just log the error
-		if err != nil {
-			log.Println(err)
-		}
-	}()
-
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		entry := AggregatorLogEntry{}
@@ -101,6 +90,15 @@ func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 
 	if err := scanner.Err(); err != nil {
 		return entries, err
+	}
+
+	// log file needs to be closed properly
+	// try to close the file
+	err = file.Close()
+
+	// in case of error all we can do is to just log the error
+	if err != nil {
+		log.Println(err)
 	}
 
 	return entries, nil
