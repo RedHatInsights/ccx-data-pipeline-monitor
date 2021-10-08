@@ -226,7 +226,7 @@ func getConsumedNotReadMessages(entries []AggregatorLogEntry) []AggregatorLogEnt
 
 func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	read := filterByMessage(entries, readFilter)
-	whitelisted := filterByMessage(entries, "Organization whitelisted")
+	whitelisted := filterByMessage(entries, organizationWhitelisted)
 	return diffEntryListsByOffset(read, whitelisted)
 }
 
