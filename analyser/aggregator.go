@@ -1,4 +1,4 @@
-// Copyright 2020 Red Hat, Inc
+// Copyright 2020, 2021 Red Hat, Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,11 +32,12 @@ import (
 
 // Filters
 const (
-	readFilter       = "Read"
-	marshalledFilter = "Marshalled"
-	timeOkFilter     = "Time ok"
-	storedFilter     = "Stored"
-	consumedFilter   = "Consumed"
+	readFilter              = "Read"
+	marshalledFilter        = "Marshalled"
+	timeOkFilter            = "Time ok"
+	storedFilter            = "Stored"
+	consumedFilter          = "Consumed"
+	organizationWhitelisted = "Organization whitelisted"
 )
 
 // Messages
@@ -135,7 +136,7 @@ func printStatisticLine(colorizer aurora.Aurora, what string, entries []Aggregat
 func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEntry) {
 	consumed := filterConsumedMessages(entries)
 	read := filterByMessage(entries, readFilter)
-	whitelisted := filterByMessage(entries, "Organization whitelisted")
+	whitelisted := filterByMessage(entries, organizationWhitelisted)
 	marshalled := filterByMessage(entries, marshalledFilter)
 	checked := filterByMessage(entries, timeOkFilter)
 	stored := filterByMessage(entries, storedFilter)
