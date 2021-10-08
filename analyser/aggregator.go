@@ -231,7 +231,7 @@ func getNotWhitelistedMessages(entries []AggregatorLogEntry) []AggregatorLogEntr
 }
 
 func getNotMarshalledMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
-	whitelisted := filterByMessage(entries, "Organization whitelisted")
+	whitelisted := filterByMessage(entries, organizationWhitelisted)
 	marshalled := filterByMessage(entries, marshalledFilter)
 	return diffEntryListsByOffset(whitelisted, marshalled)
 }
