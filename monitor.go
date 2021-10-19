@@ -176,7 +176,7 @@ func completer(in prompt.Document) []prompt.Suggest {
 	return prompt.FilterHasPrefix(firstWord, blocks[0], true)
 }
 
-func loadConfiguration(defaultConfigName string, envVar string) error {
+func loadConfiguration(defaultConfigName, envVar string) error {
 	log.Println("Reading configuration")
 	configFile, specified := os.LookupEnv("CCX_DATA_PIPELINE_MONITOR")
 	if specified {
@@ -228,12 +228,10 @@ func startWebUI() {
 	}
 
 	// server has to be stopped properly
-	defer func() {
-		err := server.Stop(context.TODO())
-		if err != nil {
-			panic(fmt.Errorf("Stopping server: %s", err))
-		}
-	}()
+	err = server.Stop(context.TODO())
+	if err != nil {
+		panic(fmt.Errorf("Stopping server: %s", err))
+	}
 }
 
 func main() {

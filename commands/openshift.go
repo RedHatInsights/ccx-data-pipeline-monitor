@@ -32,7 +32,7 @@ var aggregatorPod string = ""
 var pipelinePod string = ""
 
 // TryToLogin tries to login to OpenShift via oc command
-func TryToLogin(url string, ocLogin string) bool {
+func TryToLogin(url, ocLogin string) bool {
 	stdout, stderr, err := oc.Login(url, ocLogin)
 	if err != nil {
 		fmt.Println(colorizer.Red("\nUnable to login to OpenShift"))
@@ -84,7 +84,7 @@ func GetPods() {
 }
 
 // GetLogs function retrieves logs from selected pod and stores logs in file.
-func GetLogs(pod string, storeto string) {
+func GetLogs(pod, storeto string) {
 	stdout, stderr, err := oc.GetLogs(pod)
 	if err != nil {
 		fmt.Println(colorizer.Red("\nUnable to read logs"))
