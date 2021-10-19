@@ -176,7 +176,7 @@ func completer(in prompt.Document) []prompt.Suggest {
 	return prompt.FilterHasPrefix(firstWord, blocks[0], true)
 }
 
-func loadConfiguration(defaultConfigName string, envVar string) error {
+func loadConfiguration(defaultConfigName, envVar string) error {
 	log.Println("Reading configuration")
 	configFile, specified := os.LookupEnv("CCX_DATA_PIPELINE_MONITOR")
 	if specified {
