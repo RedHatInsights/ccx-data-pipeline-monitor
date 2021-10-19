@@ -46,7 +46,7 @@ func Command(args ...string) (string, string, error) {
 }
 
 // Login perform login into oc
-func Login(url string, arg string) (string, string, error) {
+func Login(url, arg string) (string, string, error) {
 	token := getToken(arg)
 	return Command("login", url, "--token="+token)
 }
