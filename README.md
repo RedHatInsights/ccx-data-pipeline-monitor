@@ -9,6 +9,12 @@
 
 Monitor for CCX data pipeline
 
+<!-- vim-markdown-toc GFM -->
+
+* [Package manifest](#package-manifest)
+
+<!-- vim-markdown-toc -->
+
 ## Package manifest
 
 Package manifest is available at [docs/manifest.txt](docs/manifest.txt).
