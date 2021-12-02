@@ -51,6 +51,11 @@ const (
 	entryLevelError = "error"
 )
 
+// Others
+const (
+	timeAndMessageTemplate = "\t%s  %s\n"
+)
+
 // AggregatorLogEntry represents one log entry (record) read from log file.
 type AggregatorLogEntry struct {
 	Level        string `json:"level"`
@@ -162,7 +167,7 @@ func printReadEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
 func printErrorsForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
 	for _, entry := range entries {
 		if entry.Offset == offset && entry.Level == entryLevelError {
-			fmt.Printf("\t%s  %s\n", colorizer.Gray(8, entry.Time), colorizer.Red(entry.Error))
+			fmt.Printf(timeAndMessageTemplate, colorizer.Gray(8, entry.Time), colorizer.Red(entry.Error))
 		}
 	}
 }
