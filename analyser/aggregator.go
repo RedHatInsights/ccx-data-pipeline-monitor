@@ -133,7 +133,7 @@ func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorL
 	return filtered
 }
 
-func printStatisticLine(colorizer aurora.Aurora, what string, entries []AggregatorLogEntry, nextEntries []AggregatorLogEntry) {
+func printStatisticLine(colorizer aurora.Aurora, what string, entries, nextEntries []AggregatorLogEntry) {
 	e := strconv.Itoa(len(entries))
 	x := strconv.Itoa(len(nextEntries) - len(entries))
 	fmt.Printf("%-12s %s messages (%s excluded)\n", what, colorizer.Blue(e), colorizer.Red(x))
