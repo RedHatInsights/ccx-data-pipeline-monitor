@@ -50,12 +50,6 @@ func logRequestHandler(writer http.ResponseWriter, request *http.Request, nextHa
 	log.Println("Request URI: " + request.RequestURI)
 	log.Println("Request method: " + request.Method)
 	nextHandler.ServeHTTP(writer, request)
-	/*
-		metrics.APIRequests.With(prometheus.Labels{"url": request.RequestURI}).Inc()
-		startTime := time.Now()
-		duration := time.Since(startTime)
-		metrics.APIResponsesTime.With(prometheus.Labels{"url": request.RequestURI}).Observe(float64(duration.Microseconds()))
-	*/
 }
 
 func staticPage(filename string) func(writer http.ResponseWriter, request *http.Request) {
