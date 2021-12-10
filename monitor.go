@@ -199,7 +199,6 @@ func startCLI() {
 	// parse command line arguments and flags
 	var colors = flag.Bool("colors", true, "enable or disable colors")
 	var useCompleter = flag.Bool("completer", true, "enable or disable command line completer")
-	// var askForConfirmation = flag.Bool("confirmation", true, "enable or disable asking for confirmation for selected actions (like delete)")
 	flag.Parse()
 
 	colorizer = aurora.NewAurora(*colors)
