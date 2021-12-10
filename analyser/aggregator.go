@@ -81,6 +81,7 @@ func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		entry := AggregatorLogEntry{}
