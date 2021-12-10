@@ -108,7 +108,7 @@ func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 
 	// log file needs to be closed properly
 	// try to close the file
-	err := file.Close()
+	err = file.Close()
 
 	// in case of error all we can do is to just log the error
 	if err != nil {
