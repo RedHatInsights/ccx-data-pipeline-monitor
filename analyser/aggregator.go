@@ -189,7 +189,7 @@ func printInfoForMessageWithOffset(colorizer aurora.Aurora, entries []Aggregator
 	}
 }
 
-func printConsumedEntries(colorizer aurora.Aurora, entries []AggregatorLogEntry, notRead []AggregatorLogEntry) {
+func printConsumedEntries(colorizer aurora.Aurora, entries, notRead []AggregatorLogEntry) {
 	for i, entry := range notRead {
 		printConsumedEntry(colorizer, i+1, entry)
 		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
