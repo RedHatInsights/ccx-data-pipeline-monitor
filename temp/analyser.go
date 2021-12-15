@@ -246,7 +246,7 @@ func analyse() {
 	}
 	fmt.Println("Read:", len(entries2), "log entries read")
 	printAggregatorStatistic(entries2)
-	// printConsumedNotRead(entries2)
+	printConsumedNotRead(entries2)
 	printAggregatorNotWhitelisted(entries2)
 }
 
