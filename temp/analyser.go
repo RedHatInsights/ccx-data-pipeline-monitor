@@ -233,13 +233,6 @@ func printAggregatorNotWhitelisted(entries []AggregatorLogEntry) {
 }
 
 func analyse() {
-	/*
-		entries, err := readPipelineLogFile("pipeline3.log")
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(entries)*/
-
 	entries2, err := readAggregatorLogFile("aggregator3.log")
 	if err != nil {
 		log.Fatal(err)
