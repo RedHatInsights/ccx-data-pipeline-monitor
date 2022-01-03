@@ -3,7 +3,7 @@ module github.com/RedHatInsights/ccx-data-pipeline-monitor
 go 1.14
 
 require (
-	github.com/RedHatInsights/insights-operator-utils v1.8.2
+	github.com/RedHatInsights/insights-operator-utils v1.14.0
 	github.com/c-bata/go-prompt v0.2.3
 	github.com/gorilla/mux v1.8.0
 	github.com/logrusorgru/aurora v0.0.0-20200102142835-e9ef32dff381
