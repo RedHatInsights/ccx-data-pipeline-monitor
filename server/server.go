@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,8 +61,7 @@ func staticPage(filename string) func(writer http.ResponseWriter, request *http.
 
 func sendStaticPage(writer http.ResponseWriter, filename string) {
 	// disable "G304 (CWE-22): Potential file inclusion via variable"
-	// #nosec G304
-	body, err := ioutil.ReadFile(filename)
+	body, err := ioutil.ReadFile(filename) // #nosec G304
 	if err == nil {
 		writer.Header().Set("Server", "A Go Web Server")
 		writer.Header().Set("Content-Type", getContentType(filename))
