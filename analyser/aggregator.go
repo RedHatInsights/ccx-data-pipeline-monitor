@@ -180,14 +180,6 @@ func printMessageForErrorsMessageWithOffset(colorizer aurora.Aurora, entries []A
 	}
 }
 
-func printInfoForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
-	for _, entry := range entries {
-		if entry.Offset == offset && entry.Level == "info" {
-			fmt.Printf(timeAndMessageTemplate, colorizer.Gray(8, entry.Time), colorizer.Red(entry.Error))
-		}
-	}
-}
-
 func printConsumedEntries(colorizer aurora.Aurora, entries, notRead []AggregatorLogEntry) {
 	for i, entry := range notRead {
 		printConsumedEntry(colorizer, i+1, entry)
