@@ -28,8 +28,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/RedHatInsights/insights-operator-utils/responses"
-
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 )
 
