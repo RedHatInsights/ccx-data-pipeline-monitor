@@ -28,8 +28,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/RedHatInsights/insights-operator-utils/responses"
-
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 )
 
@@ -104,13 +102,6 @@ func (server *HTTPServer) LogRequest(nextHandler http.Handler) http.Handler {
 		func(writer http.ResponseWriter, request *http.Request) {
 			logRequestHandler(writer, request, nextHandler)
 		})
-}
-
-func (server *HTTPServer) mainEndpoint(writer http.ResponseWriter, _ *http.Request) {
-	err := responses.SendOK(writer, responses.BuildOkResponse())
-	if err != nil {
-		log.Println("Error sending response in main endpoint", err)
-	}
 }
 
 // Initialize perform the server initialization

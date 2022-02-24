@@ -55,6 +55,16 @@ type AggregatorLogEntry struct {
 	Cluster      string `json:"cluster"`
 }
 
+// ReadPipelineLogFiles reads all log files gathered from CCX data pipeline pods.
+func ReadPipelineLogFiles(filename string) (int, error) {
+	var err error
+	pipelineEntries, err := readPipelineLogFile(filename)
+	if err != nil {
+		return 0, err
+	}
+	return len(pipelineEntries), nil
+}
+
 func readPipelineLogFile(filename string) ([]PipelineLogEntry, error) {
 	entries := []PipelineLogEntry{}
 
@@ -253,6 +263,11 @@ func analyse() {
 	printAggregatorStatistic(entries2)
 	printConsumedNotRead(entries2)
 	printAggregatorNotWhitelisted(entries2)
+
+	_, err = ReadPipelineLogFiles("pipeline.log")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
