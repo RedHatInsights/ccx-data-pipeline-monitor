@@ -106,13 +106,6 @@ func (server *HTTPServer) LogRequest(nextHandler http.Handler) http.Handler {
 		})
 }
 
-func (server *HTTPServer) mainEndpoint(writer http.ResponseWriter, _ *http.Request) {
-	err := responses.SendOK(writer, responses.BuildOkResponse())
-	if err != nil {
-		log.Println("Error sending response in main endpoint", err)
-	}
-}
-
 // Initialize perform the server initialization
 func (server *HTTPServer) Initialize(address string) http.Handler {
 	log.Println("Initializing HTTP server at", address)
