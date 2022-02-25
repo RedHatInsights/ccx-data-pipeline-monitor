@@ -119,6 +119,14 @@ limitations under the License.
 
 <div class="keyword">package</div> <div class="ident">main</div><div class="operator"></div>
 
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Documentation in literate-programming-style is available at:
+https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/monitor.html</p>
+</td>
+	<td class="code"><pre><code>
 <div class="keyword">import</div> <div class="operator">(</div>
 	<div class="literal">&#34;bufio&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;context&#34;</div><div class="operator"></div>
@@ -326,7 +334,7 @@ limitations under the License.
 	<td class="code"><pre><code>	<div class="keyword">return</div> <div class="ident">prompt</div><div class="operator">.</div><div class="ident">FilterHasPrefix</div><div class="operator">(</div><div class="ident">firstWord</div><div class="operator">,</div> <div class="ident">blocks</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div><div class="operator">,</div> <div class="ident">true</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
-<div class="keyword">func</div> <div class="ident">loadConfiguration</div><div class="operator">(</div><div class="ident">defaultConfigName</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">envVar</div> <div class="ident">string</div><div class="operator">)</div> <div class="ident">error</div> <div class="operator">{</div>
+<div class="keyword">func</div> <div class="ident">loadConfiguration</div><div class="operator">(</div><div class="ident">defaultConfigName</div><div class="operator">,</div> <div class="ident">envVar</div> <div class="ident">string</div><div class="operator">)</div> <div class="ident">error</div> <div class="operator">{</div>
 	<div class="ident">log</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="literal">&#34;Reading configuration&#34;</div><div class="operator">)</div><div class="operator"></div>
 	<div class="ident">configFile</div><div class="operator">,</div> <div class="ident">specified</div> <div class="operator">:=</div> <div class="ident">os</div><div class="operator">.</div><div class="ident">LookupEnv</div><div class="operator">(</div><div class="literal">&#34;CCX_DATA_PIPELINE_MONITOR&#34;</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">specified</div> <div class="operator">{</div>
@@ -369,13 +377,7 @@ limitations under the License.
 </td>
 	<td class="code"><pre><code>	<div class="keyword">var</div> <div class="ident">colors</div> <div class="operator">=</div> <div class="ident">flag</div><div class="operator">.</div><div class="ident">Bool</div><div class="operator">(</div><div class="literal">&#34;colors&#34;</div><div class="operator">,</div> <div class="ident">true</div><div class="operator">,</div> <div class="literal">&#34;enable or disable colors&#34;</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">var</div> <div class="ident">useCompleter</div> <div class="operator">=</div> <div class="ident">flag</div><div class="operator">.</div><div class="ident">Bool</div><div class="operator">(</div><div class="literal">&#34;completer&#34;</div><div class="operator">,</div> <div class="ident">true</div><div class="operator">,</div> <div class="literal">&#34;enable or disable command line completer&#34;</div><div class="operator">)</div><div class="operator"></div>
-</code></pre></td>
-      </tr>
-      
-      <tr class="section">
-	<td class="doc"><p>var askForConfirmation = flag.Bool(&quot;confirmation&quot;, true, &quot;enable or disable asking for confirmation for selected actions (like delete)&quot;)</p>
-</td>
-	<td class="code"><pre><code>	<div class="ident">flag</div><div class="operator">.</div><div class="ident">Parse</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">flag</div><div class="operator">.</div><div class="ident">Parse</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 
 	<div class="ident">colorizer</div> <div class="operator">=</div> <div class="ident">aurora</div><div class="operator">.</div><div class="ident">NewAurora</div><div class="operator">(</div><div class="operator">*</div><div class="ident">colors</div><div class="operator">)</div><div class="operator"></div>
 	<div class="ident">commands</div><div class="operator">.</div><div class="ident">SetColorizer</div><div class="operator">(</div><div class="ident">colorizer</div><div class="operator">)</div><div class="operator"></div>
@@ -408,12 +410,10 @@ limitations under the License.
       <tr class="section">
 	<td class="doc"><p>server has to be stopped properly</p>
 </td>
-	<td class="code"><pre><code>	<div class="keyword">defer</div> <div class="keyword">func</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
-		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">server</div><div class="operator">.</div><div class="ident">Stop</div><div class="operator">(</div><div class="ident">context</div><div class="operator">.</div><div class="ident">TODO</div><div class="operator">(</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
-		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
-			<div class="ident">panic</div><div class="operator">(</div><div class="ident">fmt</div><div class="operator">.</div><div class="ident">Errorf</div><div class="operator">(</div><div class="literal">&#34;Stopping server: %s&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
-		<div class="operator">}</div><div class="operator"></div>
-	<div class="operator">}</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<td class="code"><pre><code>	<div class="ident">err</div> <div class="operator">=</div> <div class="ident">server</div><div class="operator">.</div><div class="ident">Stop</div><div class="operator">(</div><div class="ident">context</div><div class="operator">.</div><div class="ident">TODO</div><div class="operator">(</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">panic</div><div class="operator">(</div><div class="ident">fmt</div><div class="operator">.</div><div class="ident">Errorf</div><div class="operator">(</div><div class="literal">&#34;Stopping server: %s&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
 <div class="keyword">func</div> <div class="ident">main</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
