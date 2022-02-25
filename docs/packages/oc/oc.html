@@ -119,6 +119,14 @@ limitations under the License.
 
 <div class="keyword">package</div> <div class="ident">oc</div><div class="operator"></div>
 
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Documentation in literate-programming-style is available at:
+https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/oc/oc.html</p>
+</td>
+	<td class="code"><pre><code>
 <div class="keyword">import</div> <div class="operator">(</div>
 	<div class="literal">&#34;bytes&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;os/exec&#34;</div><div class="operator"></div>
@@ -147,8 +155,8 @@ limitations under the License.
 	<div class="ident">cmd</div><div class="operator">.</div><div class="ident">Stderr</div> <div class="operator">=</div> <div class="operator">&amp;</div><div class="ident">stderr</div><div class="operator"></div>
 
 	<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">cmd</div><div class="operator">.</div><div class="ident">Run</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
-	<div class="ident">outString</div> <div class="operator">:=</div> <div class="ident">string</div><div class="operator">(</div><div class="ident">stdout</div><div class="operator">.</div><div class="ident">Bytes</div><div class="operator">(</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
-	<div class="ident">errString</div> <div class="operator">:=</div> <div class="ident">string</div><div class="operator">(</div><div class="ident">stderr</div><div class="operator">.</div><div class="ident">Bytes</div><div class="operator">(</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">outString</div> <div class="operator">:=</div> <div class="ident">stdout</div><div class="operator">.</div><div class="ident">String</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">errString</div> <div class="operator">:=</div> <div class="ident">stderr</div><div class="operator">.</div><div class="ident">String</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="keyword">return</div> <div class="ident">outString</div><div class="operator">,</div> <div class="ident">errString</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
@@ -162,7 +170,7 @@ limitations under the License.
       <tr class="section">
 	<td class="doc"><p>Login perform login into oc</p>
 </td>
-	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">Login</div><div class="operator">(</div><div class="ident">url</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">arg</div> <div class="ident">string</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">string</div><div class="operator">,</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">Login</div><div class="operator">(</div><div class="ident">url</div><div class="operator">,</div> <div class="ident">arg</div> <div class="ident">string</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">string</div><div class="operator">,</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
 	<div class="ident">token</div> <div class="operator">:=</div> <div class="ident">getToken</div><div class="operator">(</div><div class="ident">arg</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">return</div> <div class="ident">Command</div><div class="operator">(</div><div class="literal">&#34;login&#34;</div><div class="operator">,</div> <div class="ident">url</div><div class="operator">,</div> <div class="literal">&#34;--token=&#34;</div><div class="operator">&#43;</div><div class="ident">token</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
