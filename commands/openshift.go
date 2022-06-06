@@ -21,7 +21,7 @@ package commands
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
@@ -94,7 +94,7 @@ func GetLogs(pod, storeto string) {
 	fmt.Println(colorizer.Green("Logs have been read"))
 	fmt.Printf("Log file size: %d bytes\n", len(stdout))
 
-	err = ioutil.WriteFile(storeto, []byte(stdout), 0600)
+	err = os.WriteFile(storeto, []byte(stdout), 0600)
 	if err != nil {
 		fmt.Println(colorizer.Red("\nUnable to write logs"))
 		fmt.Println(err)
