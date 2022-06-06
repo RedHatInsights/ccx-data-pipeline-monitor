@@ -23,9 +23,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/gorilla/mux"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
@@ -59,7 +59,7 @@ func staticPage(filename string) func(writer http.ResponseWriter, request *http.
 
 func sendStaticPage(writer http.ResponseWriter, filename string) {
 	// disable "G304 (CWE-22): Potential file inclusion via variable"
-	body, err := ioutil.ReadFile(filename) // #nosec G304
+	body, err := os.ReadFile(filename) // #nosec G304
 	if err == nil {
 		writer.Header().Set("Server", "A Go Web Server")
 		writer.Header().Set("Content-Type", getContentType(filename))
