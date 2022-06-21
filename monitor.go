@@ -220,14 +220,14 @@ func startCLI() {
 
 func startWebUI() {
 	serverConfig := config.ReadServerConfig()
-	server := server.New(serverConfig)
-	err := server.Start()
+	httpServer := server.New(serverConfig)
+	err := httpServer.Start()
 	if err != nil {
 		panic(fmt.Errorf("Starting server: %s", err))
 	}
 
 	// server has to be stopped properly
-	err = server.Stop(context.TODO())
+	err = httpServer.Stop(context.TODO())
 	if err != nil {
 		panic(fmt.Errorf("Stopping server: %s", err))
 	}
