@@ -27,6 +27,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
 )
@@ -126,7 +127,13 @@ func (server *HTTPServer) Start() error {
 	address := server.Config.Address
 	log.Println("Starting HTTP server at", address)
 	router := server.Initialize(address)
-	server.Serv = &http.Server{Addr: address, Handler: router}
+	server.Serv = &http.Server{
+		Addr:              address,
+		Handler:           router,
+		ReadTimeout:       10 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
+		WriteTimeout:      30 * time.Second,
+	}
 
 	err := server.Serv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
