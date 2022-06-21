@@ -38,9 +38,9 @@ type HTTPServer struct {
 }
 
 // New constructs new implementation of Server interface
-func New(config config.ServerConfig) *HTTPServer {
+func New(configuration config.ServerConfig) *HTTPServer {
 	return &HTTPServer{
-		Config: config,
+		Config: configuration,
 	}
 }
 
