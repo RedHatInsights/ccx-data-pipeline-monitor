@@ -35,9 +35,9 @@ func Command(args ...string) (outString, errString string, err error) {
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	err := cmd.Run()
-	outString := stdout.String()
-	errString := stderr.String()
+	err = cmd.Run()
+	outString = stdout.String()
+	errString = stderr.String()
 	if err != nil {
 		return outString, errString, err
 	}
