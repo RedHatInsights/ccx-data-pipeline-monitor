@@ -181,9 +181,9 @@ func printMessageForErrorsMessageWithOffset(colorizer aurora.Aurora, entries []A
 }
 
 func printConsumedEntries(colorizer aurora.Aurora, entries, notRead []AggregatorLogEntry) {
-	for i, entry := range notRead {
-		printConsumedEntry(colorizer, i+1, &entry)
-		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
+	for i := range notRead {
+		printConsumedEntry(colorizer, i+1, &entries[i])
+		printErrorsForMessageWithOffset(colorizer, entries, entries[i].Offset)
 	}
 	fmt.Println()
 }
