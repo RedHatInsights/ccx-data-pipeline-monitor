@@ -26,7 +26,7 @@ import (
 )
 
 // Command run any oc command and return its standard and error outputs
-func Command(args ...string) (string, string, error) {
+func Command(args ...string) (outString, errString string, err error) {
 	// disable "G204 (CWE-78): Subprocess launched with variable
 	// #nosec G204
 	cmd := exec.Command("oc", args...)
