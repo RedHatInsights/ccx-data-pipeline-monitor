@@ -154,7 +154,7 @@ func printAggregatorStatistic(colorizer aurora.Aurora, entries []AggregatorLogEn
 	printStatisticLine(colorizer, storedFilter, stored, checked)
 }
 
-func printConsumedEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
+func printConsumedEntry(colorizer aurora.Aurora, i int, entry *AggregatorLogEntry) {
 	e := strconv.Itoa(i)
 	fmt.Printf("%5s  %s  %s  %s  %d\t", colorizer.Blue(e), colorizer.Gray(8, entry.Time), entry.Group, entry.Topic, colorizer.Cyan(entry.Offset))
 }
@@ -181,9 +181,9 @@ func printMessageForErrorsMessageWithOffset(colorizer aurora.Aurora, entries []A
 }
 
 func printConsumedEntries(colorizer aurora.Aurora, entries, notRead []AggregatorLogEntry) {
-	for i, entry := range notRead {
-		printConsumedEntry(colorizer, i+1, entry)
-		printErrorsForMessageWithOffset(colorizer, entries, entry.Offset)
+	for i := range notRead {
+		printConsumedEntry(colorizer, i+1, &entries[i])
+		printErrorsForMessageWithOffset(colorizer, entries, entries[i].Offset)
 	}
 	fmt.Println()
 }
