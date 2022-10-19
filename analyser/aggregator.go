@@ -159,7 +159,7 @@ func printConsumedEntry(colorizer aurora.Aurora, i int, entry *AggregatorLogEntr
 	fmt.Printf("%5s  %s  %s  %s  %d\t", colorizer.Blue(e), colorizer.Gray(8, entry.Time), entry.Group, entry.Topic, colorizer.Cyan(entry.Offset))
 }
 
-func printReadEntry(colorizer aurora.Aurora, i int, entry AggregatorLogEntry) {
+func printReadEntry(colorizer aurora.Aurora, i int, entry *AggregatorLogEntry) {
 	e := strconv.Itoa(i)
 	fmt.Printf("%5s  %s  %s  %s  %d  %d  %s\t", colorizer.Blue(e), colorizer.Gray(8, entry.Time), entry.Group, entry.Topic, colorizer.Cyan(entry.Offset), colorizer.Yellow(entry.Organization), entry.Cluster)
 }
@@ -182,16 +182,16 @@ func printMessageForErrorsMessageWithOffset(colorizer aurora.Aurora, entries []A
 
 func printConsumedEntries(colorizer aurora.Aurora, entries, notRead []AggregatorLogEntry) {
 	for i := range notRead {
-		printConsumedEntry(colorizer, i+1, &entries[i])
-		printErrorsForMessageWithOffset(colorizer, entries, entries[i].Offset)
+		printConsumedEntry(colorizer, i+1, &notRead[i])
+		printErrorsForMessageWithOffset(colorizer, entries, notRead[i].Offset)
 	}
 	fmt.Println()
 }
 
 func printReadEntries(colorizer aurora.Aurora, entries, notRead []AggregatorLogEntry) {
-	for i, entry := range notRead {
-		printReadEntry(colorizer, i+1, entry)
-		printMessageForErrorsMessageWithOffset(colorizer, entries, entry.Offset)
+	for i := range notRead {
+		printReadEntry(colorizer, i+1, &notRead[i])
+		printMessageForErrorsMessageWithOffset(colorizer, entries, notRead[i].Offset)
 	}
 	fmt.Println()
 }
