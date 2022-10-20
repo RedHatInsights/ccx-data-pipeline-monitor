@@ -144,7 +144,7 @@ func filterConsumedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	consumed := []AggregatorLogEntry{}
 
 	for i := range entries {
-		if entries[i].Message == "Consumed" && entry.Group != "" {
+		if entries[i].Message == "Consumed" && entries[i].Group != "" {
 			consumed = append(consumed, entries[i])
 		}
 	}
