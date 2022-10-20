@@ -193,9 +193,9 @@ func printReadEntry(entry *AggregatorLogEntry) {
 }
 
 func printErrorsForMessageWithOffset(entries []AggregatorLogEntry, offset int) {
-	for _, entry := range entries {
-		if entry.Offset == offset && entry.Level == "error" {
-			fmt.Printf("\t%s %s\n", entry.Time, entry.Error)
+	for i := range entries {
+		if entries[i].Offset == offset && entries[i].Level == "error" {
+			fmt.Printf("\t%s %s\n", entries[i].Time, entries[i].Error)
 
 		}
 	}
