@@ -182,7 +182,7 @@ func printAggregatorStatistic(entries []AggregatorLogEntry) {
 	printStatisticLine(storedFilter, stored)
 }
 
-func printConsumedEntry(entry AggregatorLogEntry) {
+func printConsumedEntry(entry *AggregatorLogEntry) {
 	fmt.Printf("%s %s %s %d\n", entry.Time, entry.Group, entry.Topic, entry.Offset)
 }
 
@@ -200,9 +200,9 @@ func printErrorsForMessageWithOffset(entries []AggregatorLogEntry, offset int) {
 }
 
 func printConsumedEntries(entries, notRead []AggregatorLogEntry) {
-	for _, entry := range notRead {
-		printConsumedEntry(entry)
-		printErrorsForMessageWithOffset(entries, entry.Offset)
+	for i := range notRead {
+		printConsumedEntry(&notRead[i])
+		printErrorsForMessageWithOffset(entries, notRead[i].Offset)
 	}
 }
 
