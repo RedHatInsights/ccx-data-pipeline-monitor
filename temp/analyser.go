@@ -216,8 +216,8 @@ func printReadEntries(entries, notRead []AggregatorLogEntry) {
 }
 
 func messageWithOffsetIn(entries []AggregatorLogEntry, offset int) bool {
-	for _, entry := range entries {
-		if entry.Offset == offset {
+	for i := range entries {
+		if entries[i].Offset == offset {
 			return true
 		}
 	}
