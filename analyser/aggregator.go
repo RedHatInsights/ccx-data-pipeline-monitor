@@ -124,9 +124,11 @@ func filterConsumedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 func filterByMessage(entries []AggregatorLogEntry, message string) []AggregatorLogEntry {
 	filtered := []AggregatorLogEntry{}
 
-	for _, entry := range entries {
-		if entry.Message == message && entry.Topic != "" && entry.Organization != 0 && entry.Cluster != "" && entry.Group == "" {
-			filtered = append(filtered, entry)
+	for i := range entries {
+		if entries[i].Message == message && entries[i].Topic != "" &&
+			entries[i].Organization != 0 && entries[i].Cluster != "" &&
+			entries[i].Group == "" {
+			filtered = append(filtered, entries[i])
 		}
 	}
 	return filtered
