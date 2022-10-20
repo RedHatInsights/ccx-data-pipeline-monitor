@@ -113,9 +113,9 @@ func readAggregatorLogFile(filename string) ([]AggregatorLogEntry, error) {
 func filterConsumedMessages(entries []AggregatorLogEntry) []AggregatorLogEntry {
 	consumed := []AggregatorLogEntry{}
 
-	for _, entry := range entries {
-		if entry.Message == consumedFilter && entry.Group != "" {
-			consumed = append(consumed, entry)
+	for i := range entries {
+		if entries[i].Message == consumedFilter && entries[i].Group != "" {
+			consumed = append(consumed, entries[i])
 		}
 	}
 	return consumed
