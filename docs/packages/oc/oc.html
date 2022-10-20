@@ -139,7 +139,7 @@ https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/oc/oc.html</
       <tr class="section">
 	<td class="doc"><p>Command run any oc command and return its standard and error outputs</p>
 </td>
-	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">Command</div><div class="operator">(</div><div class="ident">args</div> <div class="operator">...</div><div class="ident">string</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">string</div><div class="operator">,</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">Command</div><div class="operator">(</div><div class="ident">args</div> <div class="operator">...</div><div class="ident">string</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">outString</div><div class="operator">,</div> <div class="ident">errString</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">err</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
       
@@ -154,9 +154,9 @@ https://redhatinsights.github.io/ccx-data-pipeline-monitor/packages/oc/oc.html</
 	<div class="ident">cmd</div><div class="operator">.</div><div class="ident">Stdout</div> <div class="operator">=</div> <div class="operator">&amp;</div><div class="ident">stdout</div><div class="operator"></div>
 	<div class="ident">cmd</div><div class="operator">.</div><div class="ident">Stderr</div> <div class="operator">=</div> <div class="operator">&amp;</div><div class="ident">stderr</div><div class="operator"></div>
 
-	<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">cmd</div><div class="operator">.</div><div class="ident">Run</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
-	<div class="ident">outString</div> <div class="operator">:=</div> <div class="ident">stdout</div><div class="operator">.</div><div class="ident">String</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
-	<div class="ident">errString</div> <div class="operator">:=</div> <div class="ident">stderr</div><div class="operator">.</div><div class="ident">String</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">err</div> <div class="operator">=</div> <div class="ident">cmd</div><div class="operator">.</div><div class="ident">Run</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">outString</div> <div class="operator">=</div> <div class="ident">stdout</div><div class="operator">.</div><div class="ident">String</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">errString</div> <div class="operator">=</div> <div class="ident">stderr</div><div class="operator">.</div><div class="ident">String</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="keyword">return</div> <div class="ident">outString</div><div class="operator">,</div> <div class="ident">errString</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
