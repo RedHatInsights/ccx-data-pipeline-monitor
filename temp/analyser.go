@@ -226,9 +226,9 @@ func messageWithOffsetIn(entries []AggregatorLogEntry, offset int) bool {
 
 func diffEntryListsByOffset(list1, list2 []AggregatorLogEntry) []AggregatorLogEntry {
 	diff := []AggregatorLogEntry{}
-	for _, element := range list1 {
-		if !messageWithOffsetIn(list2, element.Offset) {
-			diff = append(diff, element)
+	for i := range list1 {
+		if !messageWithOffsetIn(list2, list1[i].Offset) {
+			diff = append(diff, list1[i])
 		}
 	}
 	return diff
