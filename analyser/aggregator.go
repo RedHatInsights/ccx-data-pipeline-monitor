@@ -167,9 +167,9 @@ func printReadEntry(colorizer aurora.Aurora, i int, entry *AggregatorLogEntry) {
 }
 
 func printErrorsForMessageWithOffset(colorizer aurora.Aurora, entries []AggregatorLogEntry, offset int) {
-	for _, entry := range entries {
-		if entry.Offset == offset && entry.Level == entryLevelError {
-			fmt.Printf(timeAndMessageTemplate, colorizer.Gray(8, entry.Time), colorizer.Red(entry.Error))
+	for i := range entries {
+		if entries[i].Offset == offset && entries[i].Level == entryLevelError {
+			fmt.Printf(timeAndMessageTemplate, colorizer.Gray(8, entries[i].Time), colorizer.Red(entries[i].Error))
 		}
 	}
 }
