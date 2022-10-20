@@ -186,7 +186,7 @@ func printConsumedEntry(entry *AggregatorLogEntry) {
 	fmt.Printf("%s %s %s %d\n", entry.Time, entry.Group, entry.Topic, entry.Offset)
 }
 
-func printReadEntry(entry AggregatorLogEntry) {
+func printReadEntry(entry *AggregatorLogEntry) {
 	fmt.Printf("%s %s %s %d %d %s\n", entry.Time, entry.Group, entry.Topic, entry.Offset, entry.Organization, entry.Cluster)
 }
 
@@ -207,9 +207,9 @@ func printConsumedEntries(entries, notRead []AggregatorLogEntry) {
 }
 
 func printReadEntries(entries, notRead []AggregatorLogEntry) {
-	for _, entry := range notRead {
-		printReadEntry(entry)
-		printErrorsForMessageWithOffset(entries, entry.Offset)
+	for i := range notRead {
+		printReadEntry(&notRead[i])
+		printErrorsForMessageWithOffset(entries, notRead[i].Offset)
 	}
 }
 
