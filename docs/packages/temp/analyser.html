@@ -345,7 +345,7 @@ try to close the file</p>
 	<div class="ident">printStatisticLine</div><div class="operator">(</div><div class="ident">storedFilter</div><div class="operator">,</div> <div class="ident">stored</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
-<div class="keyword">func</div> <div class="ident">printConsumedEntry</div><div class="operator">(</div><div class="ident">entry</div> <div class="ident">AggregatorLogEntry</div><div class="operator">)</div> <div class="operator">{</div>
+<div class="keyword">func</div> <div class="ident">printConsumedEntry</div><div class="operator">(</div><div class="ident">entry</div> <div class="operator">*</div><div class="ident">AggregatorLogEntry</div><div class="operator">)</div> <div class="operator">{</div>
 	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Printf</div><div class="operator">(</div><div class="literal">&#34;%s %s %s %d\n&#34;</div><div class="operator">,</div> <div class="ident">entry</div><div class="operator">.</div><div class="ident">Time</div><div class="operator">,</div> <div class="ident">entry</div><div class="operator">.</div><div class="ident">Group</div><div class="operator">,</div> <div class="ident">entry</div><div class="operator">.</div><div class="ident">Topic</div><div class="operator">,</div> <div class="ident">entry</div><div class="operator">.</div><div class="ident">Offset</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
@@ -363,9 +363,9 @@ try to close the file</p>
 <div class="operator">}</div><div class="operator"></div>
 
 <div class="keyword">func</div> <div class="ident">printConsumedEntries</div><div class="operator">(</div><div class="ident">entries</div><div class="operator">,</div> <div class="ident">notRead</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">AggregatorLogEntry</div><div class="operator">)</div> <div class="operator">{</div>
-	<div class="keyword">for</div> <div class="ident">_</div><div class="operator">,</div> <div class="ident">entry</div> <div class="operator">:=</div> <div class="keyword">range</div> <div class="ident">notRead</div> <div class="operator">{</div>
-		<div class="ident">printConsumedEntry</div><div class="operator">(</div><div class="ident">entry</div><div class="operator">)</div><div class="operator"></div>
-		<div class="ident">printErrorsForMessageWithOffset</div><div class="operator">(</div><div class="ident">entries</div><div class="operator">,</div> <div class="ident">entry</div><div class="operator">.</div><div class="ident">Offset</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">for</div> <div class="ident">i</div> <div class="operator">:=</div> <div class="keyword">range</div> <div class="ident">notRead</div> <div class="operator">{</div>
+		<div class="ident">printConsumedEntry</div><div class="operator">(</div><div class="operator">&amp;</div><div class="ident">notRead</div><div class="operator">[</div><div class="ident">i</div><div class="operator">]</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">printErrorsForMessageWithOffset</div><div class="operator">(</div><div class="ident">entries</div><div class="operator">,</div> <div class="ident">notRead</div><div class="operator">[</div><div class="ident">i</div><div class="operator">]</div><div class="operator">.</div><div class="ident">Offset</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
