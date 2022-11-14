@@ -11,9 +11,34 @@ Monitor for CCX data pipeline
 
 <!-- vim-markdown-toc GFM -->
 
+* [Makefile targets](#makefile-targets)
 * [Package manifest](#package-manifest)
 
 <!-- vim-markdown-toc -->
+
+## Makefile targets
+
+```
+Usage: make <OPTIONS> ... <TARGETS>
+
+Available targets are:
+
+clean                Run go clean
+build                Run go build
+fmt                  Run go fmt -w for all sources
+lint                 Run golint
+vet                  Run go vet. Report likely mistakes in source code
+cyclo                Run gocyclo
+ineffassign          Run ineffassign checker
+shellcheck           Run shellcheck
+errcheck             Run errcheck
+goconst              Run goconst checker
+style                Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
+run                  Build the project and executes the binary
+test                 Run the unit tests
+help                 Show this help screen
+function_list        List all functions in generated binary file
+```
 
 ## Package manifest
 
