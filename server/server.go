@@ -76,11 +76,12 @@ func sendStaticPage(writer http.ResponseWriter, filename string) {
 
 func getContentType(filename string) string {
 	// TODO: to map
-	if strings.HasSuffix(filename, ".html") {
+	switch {
+	case strings.HasSuffix(filename, ".html"):
 		return "text/html"
-	} else if strings.HasSuffix(filename, ".js") {
+	case strings.HasSuffix(filename, ".js"):
 		return "application/javascript"
-	} else if strings.HasSuffix(filename, ".css") {
+	case strings.HasSuffix(filename, ".css"):
 		return "text/css"
 	}
 	return "text/html"
