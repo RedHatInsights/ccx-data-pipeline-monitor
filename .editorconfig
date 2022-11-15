@@ -8,11 +8,15 @@ end_of_line = lf
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{py,ipynb,html,csv}]
+[*.go]
+indent_style = tab
 indent_size = unset
 
-[*.html]
-trim_trailing_whitespace = unset
-
-[{Jenkinsfile,*.yml,*.yaml,*.ini}]
+[*.{yml,yaml}]
 indent_size = 2
+
+[openapi.json]
+indent_size = 2
+
+[Makefile]
+indent_style = tab
