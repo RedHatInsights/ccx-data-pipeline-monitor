@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,18 +46,18 @@ func Command(args ...string) (outString, errString string, err error) {
 }
 
 // Login perform login into oc
-func Login(url, arg string) (string, string, error) {
+func Login(url, arg string) (outString, errString string, err error) {
 	token := getToken(arg)
 	return Command("login", url, "--token="+token)
 }
 
 // GetPods function reads list of all pods via oc command
-func GetPods() (string, string, error) {
+func GetPods() (outString, errString string, err error) {
 	return Command("get", "pods")
 }
 
 // GetLogs functions reads logs for selected pod
-func GetLogs(pod string) (string, string, error) {
+func GetLogs(pod string) (outString, errString string, err error) {
 	return Command("logs", pod)
 }
 
