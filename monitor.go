@@ -32,7 +32,7 @@ import (
 	"github.com/c-bata/go-prompt"
 	"github.com/logrusorgru/aurora"
 	"github.com/spf13/viper"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/commands"
 	"github.com/RedHatInsights/ccx-data-pipeline-monitor/config"
@@ -56,7 +56,7 @@ func printVersion() {
 
 func login() {
 	fmt.Print("login: ")
-	p, err := terminal.ReadPassword(0)
+	p, err := term.ReadPassword(0)
 	if err != nil {
 		fmt.Println(colorizer.Red("not set"))
 	} else {

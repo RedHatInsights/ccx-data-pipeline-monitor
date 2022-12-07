@@ -12,6 +12,6 @@ require (
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pkg/term v0.0.0-20190109203006-aa71e9d9e942 // indirect
 	github.com/spf13/viper v1.10.1
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
+	golang.org/x/term v0.3.0
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 )
