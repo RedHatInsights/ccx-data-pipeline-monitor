@@ -1,4 +1,7 @@
 # ccx-data-pipeline-monitor
+
+[![forthebadge made-with-go](http://ForTheBadge.com/images/badges/made-with-go.svg)](https://go.dev/)
+
 [![GoDoc](https://godoc.org/github.com/RedHatInsights/ccx-data-pipeline-monitor?status.svg)](https://godoc.org/github.com/RedHatInsights/ccx-data-pipeline-monitor)
 [![GitHub Pages](https://img.shields.io/badge/%20-GitHub%20Pages-informational)](https://redhatinsights.github.io/ccx-data-pipeline-monitor/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/RedHatInsights/ccx-data-pipeline-monitor)](https://goreportcard.com/report/github.com/RedHatInsights/ccx-data-pipeline-monitor)
