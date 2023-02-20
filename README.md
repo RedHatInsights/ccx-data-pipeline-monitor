@@ -57,7 +57,7 @@ In order to run these tests, the following steps need to be made:
 1. run the `ccx_data_pipeline_monitor_tests.sh` from this subdirectory
 
 List of all test scenarios prepared for this service is available at
-<https://github.com/RedHatInsights/insights-behavioral-spec#ccx-data-pipeline-monitor>
+<https://redhatinsights.github.io/insights-behavioral-spec/feature_list.html#ccx-data-pipeline-monitor>
 
 
 
