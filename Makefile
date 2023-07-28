@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 .PHONY: help clean build fmt lint vet run test style cyclo
 
 SOURCES:=$(shell find . -name '*.go')
@@ -72,5 +74,18 @@ function_list: ${BINARY} ## List all functions in generated binary file
 docs/packages/%.html: %.go
 	mkdir -p $(dir $@)
 	docgo -outdir $(dir $@) $^
+	addlicense -c "Red Hat, Inc" -l "apache" -v $@
 
-godoc: ${DOCFILES}
+godoc: export GO111MODULE=off
+godoc: install_docgo install_addlicense ${DOCFILES} docs/sources.md
+
+docs/sources.md: docs/sources.tmpl.md ${DOCFILES}
+	./gen_sources_md.sh
+
+install_docgo: export GO111MODULE=off
+install_docgo:
+	[[ `command -v docgo` ]] || go get -u github.com/dhconnelly/docgo
+
+install_addlicense: export GO111MODULE=off
+install_addlicense:
+	[[ `command -v addlicense` ]] || GO111MODULE=off go get -u github.com/google/addlicense

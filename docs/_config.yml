@@ -1,7 +1,8 @@
 title: Insights Operator CLI
 description: Simple CLI client for managing the Insights operator
-baseurl: "/ccx-data-pipeline-monitor"
+baseurl: /ccx-data-pipeline-monitor
 url: "https://redhatinsights.github.io"
+repository: "RedHatInsights/ccx-data-pipeline-monitor"
 
 heading_anchors: true
 search_enabled: false
@@ -13,12 +14,14 @@ aux_links:
 footer_content: "Copyright &copy; 2020 Red Hat, Inc.</a>"
 
 # Build settings
-markdown: kramdown
+# markdown: kramdown
 remote_theme: pmarsceill/just-the-docs
 plugins:
+  - jekyll-feed
   - jekyll-remote-theme
 
 exclude:
   - Gemfile
   - Gemfile.lock
   - vendor/
+  - sources.tmpl.md
